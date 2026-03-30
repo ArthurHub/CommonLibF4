@@ -247,6 +247,7 @@ set(SOURCES
 	include/RE/Bethesda/VATS.h
 	include/RE/Bethesda/Workshop.h
 	include/RE/Bethesda/bhkCharacterController.h
+	include/RE/Bethesda/bhkPhysicsSystem.h
 	include/RE/Bethesda/bhkPickData.h
 	include/RE/Fallout.h
 	include/RE/Havok/hkArray.h
@@ -262,18 +263,26 @@ set(SOURCES
 	include/RE/Havok/hkReferencedObject.h
 	include/RE/Havok/hkSimdFloat.h
 	include/RE/Havok/hkVector4.h
+	include/RE/Havok/hknpAabbQuery.h
 	include/RE/Havok/hknpAllHitsCollector.h
+	include/RE/Havok/hknpBody.h
+	include/RE/Havok/hknpBodyCinfo.h
 	include/RE/Havok/hknpBodyId.h
 	include/RE/Havok/hknpCharacterContext.h
 	include/RE/Havok/hknpCharacterState.h
 	include/RE/Havok/hknpCharacterSurfaceInfo.h
+	include/RE/Havok/hknpCapsuleShape.h
 	include/RE/Havok/hknpClosestHitCollector.h
 	include/RE/Havok/hknpClosestUniqueBodyIdHitCollector.h
 	include/RE/Havok/hknpCollisionQueryCollector.h
 	include/RE/Havok/hknpCollisionResult.h
+	include/RE/Havok/hknpConstraintCinfo.h
+	include/RE/Havok/hknpContactEvent.h
 	include/RE/Havok/hknpMaterialId.h
 	include/RE/Havok/hknpShape.h
+	include/RE/Havok/hknpMotion.h
 	include/RE/Havok/hknpUniqueBodyIdHitCollector.h
+	include/RE/Havok/hknpWorld.h
 	include/RE/NetImmerse/NiAVObject.h
 	include/RE/NetImmerse/NiAlphaProperty.h
 	include/RE/NetImmerse/NiBinaryStream.h

@@ -12,7 +12,7 @@
 
 namespace RE
 {
-	enum class COL_LAYER;
+	enum class COL_LAYER : std::uint32_t;
 	enum class ImpactResult;
 
 	namespace BGSBodyPartDefs

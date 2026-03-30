@@ -1,5 +1,43 @@
 #pragma once
 
+// hknpShape — Havok 2014 (New Physics) collision shape base class
+//
+// All collision shapes inherit from hknpShape. The shape defines the geometric
+// volume used for collision detection. Shapes are reference-counted via
+// hkReferencedObject and can be shared between multiple bodies.
+//
+// Shape hierarchy in FO4:
+//   hknpShape (abstract base)
+//   ├── hknpConvexShape (convex primitives)
+//   │   ├── hknpCapsuleShape    — pill shape (hand colliders, character controllers)
+//   │   ├── hknpSphereShape     — sphere (not RE'd yet)
+//   │   └── hknpConvexPolytopeShape — arbitrary convex hull
+//   ├── hknpCompressedMeshShape — triangle mesh (most static world geometry)
+//   ├── hknpStaticCompoundShape — compound of multiple child shapes
+//   └── hknpHeightFieldShape    — terrain
+//
+// Shape types (hknpShapeType::Enum):
+//   kConvex = 0           — generic convex
+//   kCapsule = 3          — capsule (used for VR hand colliders)
+//   kCompressedMesh = 5   — static world geometry
+//   kStaticCompound = 7   — compound containers
+//
+// Creating shapes:
+//   // Capsule (for hand colliders):
+//   auto* capsule = RE::hknpCapsuleShape::CreateCapsuleShape(start, end, radius);
+//
+//   // Bethesda's cached capsule factory (auto-scales, 10-entry cache):
+//   // REL::ID(1526865) — bhkCharacterControllerShapeManager::GetCapsuleShape
+//
+// Shape lifetime:
+//   Shapes are ref-counted. When assigned to a body via hknpBodyCinfo::shape,
+//   the body does NOT take ownership. The caller must keep the shape alive
+//   for the body's lifetime, or use hkRefPtr<hknpShape> for automatic management.
+//
+// userData field (offset +0x18):
+//   Per-shape user data, separate from body userData. Often unused (0).
+//   Can store a pointer to application-specific shape metadata.
+
 #include "RE/Havok/hkBaseTypes.h"
 #include "RE/Havok/hkBlockStream.h"
 #include "RE/Havok/hkReferencedObject.h"
@@ -22,7 +60,7 @@ namespace RE
 
 	struct hkDiagonalizedMassProperties;
 	struct hkGeometry;
-	struct hknpAabbQuery;
+	struct hknpAabbQuery;  // Full definition in RE/Havok/hknpAabbQuery.h
 	struct hknpCdBody;
 	struct hknpCollisionQueryContext;
 	struct hknpPointQuery;
@@ -33,45 +71,49 @@ namespace RE
 	struct hknpShapeQueryInfo;
 	struct hknpSolverInfo;
 
+	/// Collision dispatch type — determines which collision algorithm is used
+	/// for narrowphase collision detection between two shapes.
 	struct hknpCollisionDispatchType
 	{
 	public:
 		enum Enum
 		{
-			kNone,
-			kConvex,
-			kComposite,
-			kDistanceField,
-			kUser
+			kNone,       ///< No collision
+			kConvex,     ///< Convex-convex (GJK/EPA)
+			kComposite,  ///< Composite shape (iterate children)
+			kDistanceField,  ///< SDF-based collision
+			kUser        ///< Custom collision algorithm
 		};
 	};
 	static_assert(std::is_empty_v<hknpCollisionDispatchType>);
 
+	/// Shape type enum — identifies the concrete shape subclass.
+	/// Use GetType() to query at runtime.
 	struct hknpShapeType
 	{
 	public:
 		enum class Enum
 		{
-			kConvex,
-			kConvexPolytope,
-			kSphere,
-			kCapsule,
-			kTriangle,
-			kCompressedMesh,
-			kExternMesh,
-			kStaticCompound,
-			kDynamicCompound,
-			kHeightField,
-			kCompressedHeightField,
-			kScaledConvex,
-			kMasked,
-			kMaskedCompound,
-			kLOD,
-			kDummy,
-			kUser0,
-			kUser1,
-			kUser2,
-			kUser3,
+			kConvex,                ///< Generic convex shape
+			kConvexPolytope,        ///< Convex hull with explicit vertices/faces
+			kSphere,                ///< Sphere (radius only)
+			kCapsule,               ///< Capsule / pill shape (line segment + radius)
+			kTriangle,              ///< Single triangle
+			kCompressedMesh,        ///< Compressed triangle mesh (most world geometry)
+			kExternMesh,            ///< External mesh reference
+			kStaticCompound,        ///< Static compound of child shapes
+			kDynamicCompound,       ///< Dynamic compound (children can move)
+			kHeightField,           ///< Terrain height field
+			kCompressedHeightField, ///< Compressed terrain
+			kScaledConvex,          ///< Uniformly scaled convex shape
+			kMasked,                ///< Shape with disabled regions
+			kMaskedCompound,        ///< Compound with masked children
+			kLOD,                   ///< Level-of-detail shape
+			kDummy,                 ///< Placeholder shape
+			kUser0,                 ///< User-defined type 0
+			kUser1,                 ///< User-defined type 1
+			kUser2,                 ///< User-defined type 2
+			kUser3,                 ///< User-defined type 3
 
 			kTotal,
 
@@ -80,6 +122,10 @@ namespace RE
 	};
 	static_assert(std::is_empty_v<hknpShapeType>);
 
+	/// hknpShape — abstract base class for all Havok 2014 collision shapes.
+	///
+	/// Memory layout: 0x30 bytes (16-byte aligned).
+	/// Inherits hkReferencedObject (ref count at +0x08, size at +0x0C).
 	class __declspec(novtable) alignas(0x10) hknpShape :
 		public hkReferencedObject  // 00
 	{
@@ -87,13 +133,14 @@ namespace RE
 		static constexpr auto RTTI{ RTTI::hknpShape };
 		static constexpr auto VTABLE{ VTABLE::hknpShape };
 
+		/// Shape capability flags — indicate what operations a shape supports.
 		enum class FlagsEnum
 		{
-			kIsConvexShape = 1u << 0,
-			kIsConvexPolytopeShape = 1u << 1,
-			kIsCompositeShape = 1u << 2,
-			kIsHeightFieldShape = 1u << 3,
-			kUseSinglePointManifold = 1u << 4,
+			kIsConvexShape = 1u << 0,        ///< Shape is a convex primitive
+			kIsConvexPolytopeShape = 1u << 1, ///< Shape has explicit vertex/face data
+			kIsCompositeShape = 1u << 2,      ///< Shape contains child shapes
+			kIsHeightFieldShape = 1u << 3,    ///< Shape is a height field
+			kUseSinglePointManifold = 1u << 4, ///< Use single-point contact manifold
 			kIsInteriorTriangle = 1u << 5,
 			kSupportsCollisionsWithInteriorTriangles = 1u << 6,
 			kUseNormalToFindSupportPlane = 1u << 7,
@@ -110,7 +157,7 @@ namespace RE
 		struct SdfContactPoint;
 		struct SdfQuery;
 
-		// add
+		// Virtual methods (vtable indices relative to hkBaseObject)
 		virtual hknpShapeType::Enum GetType() const;                                                                                                                                                                                                                                                                                                          // 04
 		virtual std::int32_t        CalcSize() const;                                                                                                                                                                                                                                                                                                         // 05
 		virtual void                CalcAabb(const hkTransformf& a_transform, hkAabb& a_aabbOut) const;                                                                                                                                                                                                                                                       // 06
@@ -139,12 +186,12 @@ namespace RE
 		virtual void                CheckConsistency() const;                                                                                                                                                                                                                                                                                                 // 1D
 
 		// members
-		hkFlags<FlagsEnum, std::uint16_t>                     flags;            // 10
-		std::uint8_t                                          numShapeKeyBits;  // 12
-		hkEnum<hknpCollisionDispatchType::Enum, std::uint8_t> dispatchType;     // 13
-		float                                                 convexRadius;     // 14
-		std::uintptr_t                                        userData;         // 18
-		hkRefCountedProperties*                               properties;       // 20
+		hkFlags<FlagsEnum, std::uint16_t>                     flags;            // 10 — shape capability flags
+		std::uint8_t                                          numShapeKeyBits;  // 12 — bits used for shape key encoding
+		hkEnum<hknpCollisionDispatchType::Enum, std::uint8_t> dispatchType;     // 13 — collision algorithm selection
+		float                                                 convexRadius;     // 14 — convex radius (margin for GJK)
+		std::uintptr_t                                        userData;         // 18 — per-shape user data (often 0)
+		hkRefCountedProperties*                               properties;       // 20 — optional ref-counted properties
 	};
 	static_assert(sizeof(hknpShape) == 0x30);
 }

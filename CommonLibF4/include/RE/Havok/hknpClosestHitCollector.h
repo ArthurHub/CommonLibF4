@@ -1,11 +1,30 @@
 #pragma once
 
+// hknpClosestHitCollector — keeps only the single closest collision hit
+//
+// The most commonly used collector. Automatically discards farther hits,
+// so after a query you either have zero or one result.
+//
+// Usage:
+//   RE::hknpClosestHitCollector collector;
+//   world->CastRay(query, &collector);
+//   if (collector.HasHit()) {
+//       float dist = collector.result.fraction;
+//       hknpBodyId hitBody = collector.result.hitBodyInfo.m_bodyId;
+//       hkVector4f hitPos = collector.result.position;
+//       hkVector4f hitNorm = collector.result.normal;
+//   }
+
 #include "RE/Havok/hkArray.h"
 #include "RE/Havok/hknpCollisionQueryCollector.h"
 #include "RE/Havok/hknpCollisionResult.h"
 
 namespace RE
 {
+	/// hknpClosestHitCollector — stores only the closest hit from a collision query.
+	///
+	/// Memory layout: 0x90 bytes. Stack-allocatable.
+	/// Constructor at REL::ID(951692)+0x10.
 	class __declspec(novtable) hknpClosestHitCollector :
 		public hknpCollisionQueryCollector  // 000
 	{
@@ -28,8 +47,8 @@ namespace RE
 		const hknpCollisionResult* GetHits() const override;                     // 05
 
 		// members
-		hknpCollisionResult result;  // 20
-		bool                hasHit;  // 80
+		hknpCollisionResult result;  // 20 — the closest hit result (valid if hasHit == true)
+		bool                hasHit;  // 80 — true if a hit was recorded
 	};
 	static_assert(sizeof(hknpClosestHitCollector) == 0x90);
 }

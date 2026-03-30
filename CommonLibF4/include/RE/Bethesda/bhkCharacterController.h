@@ -19,7 +19,62 @@
 
 namespace RE
 {
-	enum class COL_LAYER;
+	/// COL_LAYER — Collision layer enum (47 layers).
+	/// Extracted from layer name table at VR 0x1438af760.
+	/// Used in CFilter::filter (bits 0-6 = layer, bits 7+ = group/subgroup).
+	///
+	/// To extract layer from filterInfo: `COL_LAYER layer = static_cast<COL_LAYER>(filterInfo & 0x7F);`
+	/// To set layer in filterInfo: `filterInfo = (filterInfo & ~0x7F) | static_cast<uint32_t>(layer);`
+	enum class COL_LAYER : std::uint32_t
+	{
+		kUnidentified = 0,
+		kStatic = 1,
+		kAnimStatic = 2,
+		kTransparent = 3,
+		kClutter = 4,            ///< Grabbable physics objects
+		kWeapon = 5,
+		kProjectile = 6,
+		kSpell = 7,
+		kBiped = 8,              ///< Ragdoll bones
+		kTrees = 9,
+		kProps = 10,
+		kWater = 11,
+		kTrigger = 12,
+		kTerrain = 13,
+		kTrap = 14,              ///< Collides with CharController — do NOT use for arm bones
+		kNonCollidable = 15,     ///< Does not collide with most layers
+		kCloudTrap = 16,
+		kGround = 17,
+		kPortal = 18,
+		kDebrisSmall = 19,
+		kDebrisLarge = 20,
+		kAcousticSpace = 21,
+		kActorZone = 22,
+		kProjectileZone = 23,
+		kGasTrap = 24,
+		kShellCasing = 25,
+		kTransparentSmall = 26,
+		kInvisibleWall = 27,
+		kTransparentSmallAnim = 28,
+		kClutterLarge = 29,      ///< Large grabbable objects
+		kCharController = 30,    ///< Player/NPC character controller capsule
+		kStairHelper = 31,
+		kDeadBip = 32,           ///< Dead ragdoll bones
+		kBipedNoCC = 33,         ///< DOES collide with CharController (unlike kBiped which avoids CC). Ghidra-verified 2026-03-22.
+		kAvoidBox = 34,
+		kCollisionBox = 35,
+		kCameraSphere = 36,
+		kDoorDetection = 37,
+		kConeProjectile = 38,
+		kCameraPick = 39,
+		kItemPick = 40,
+		kLineOfSight = 41,
+		kPathPick = 42,
+		kUnused0 = 43,
+		kUnused1 = 44,
+		kSpellExplosion = 45,
+		kDroppingPick = 46,
+	};
 	enum class SHAPE_TYPES;
 
 	class bhkCharacterControllerCinfo;
@@ -154,6 +209,69 @@ namespace RE
 			using func_t = decltype(&bhkNPCollisionObject::SetTransform);
 			static REL::Relocation<func_t> func{ REL::ID(178085) };
 			return func(this, transform);
+		}
+
+		void SetLinearVelocity(hkVector4f& a_velocity)
+		{
+			using func_t = decltype(&bhkNPCollisionObject::SetLinearVelocity);
+			static REL::Relocation<func_t> func{ REL::ID(301531) };
+			return func(this, a_velocity);
+		}
+
+		void SetAngularVelocity(hkVector4f& a_velocity)
+		{
+			using func_t = decltype(&bhkNPCollisionObject::SetAngularVelocity);
+			static REL::Relocation<func_t> func{ REL::ID(287752) };
+			return func(this, a_velocity);
+		}
+
+		void SetVelocity(hkVector4f& a_linearVelocity, hkVector4f& a_angularVelocity)
+		{
+			using func_t = decltype(&bhkNPCollisionObject::SetVelocity);
+			static REL::Relocation<func_t> func{ REL::ID(713376) };
+			return func(this, a_linearVelocity, a_angularVelocity);
+		}
+
+		void GetPreviousLinearVelocity(hkVector4f& a_velocityOut)
+		{
+			using func_t = decltype(&bhkNPCollisionObject::GetPreviousLinearVelocity);
+			static REL::Relocation<func_t> func{ REL::ID(353575) };
+			return func(this, a_velocityOut);
+		}
+
+		void ApplyLinearImpulse(hkVector4f& a_impulse)
+		{
+			using func_t = decltype(&bhkNPCollisionObject::ApplyLinearImpulse);
+			static REL::Relocation<func_t> func{ REL::ID(858124) };
+			return func(this, a_impulse);
+		}
+
+		void ApplyPointImpulseAt(hkVector4f& a_impulse, hkVector4f& a_point)
+		{
+			using func_t = decltype(&bhkNPCollisionObject::ApplyPointImpulseAt);
+			static REL::Relocation<func_t> func{ REL::ID(844417) };
+			return func(this, a_impulse, a_point);
+		}
+
+		void SetMass(float a_mass)
+		{
+			using func_t = decltype(&bhkNPCollisionObject::SetMass);
+			static REL::Relocation<func_t> func{ REL::ID(70998) };
+			return func(this, a_mass);
+		}
+
+		std::uint32_t GetCollisionFilterInfo()
+		{
+			using func_t = decltype(&bhkNPCollisionObject::GetCollisionFilterInfo);
+			static REL::Relocation<func_t> func{ REL::ID(229984) };
+			return func(this);
+		}
+
+		void GetCenterOfMassInWorld(hkVector4f& a_centerOut)
+		{
+			using func_t = decltype(&bhkNPCollisionObject::GetCenterOfMassInWorld);
+			static REL::Relocation<func_t> func{ REL::ID(122876) };
+			return func(this, a_centerOut);
 		}
 
 		// members

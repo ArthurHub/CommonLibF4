@@ -172,7 +172,7 @@ namespace RE::BGSMod
 			void GetData(Data& a_data) const
 			{
 				using func_t = decltype(&Mod::GetData);
-				static REL::Relocation<func_t> func{ REL::ID(33658) };
+				static REL::Relocation<func_t> func{ REL::Offset(0x004F3C0) };  // VR: ID 33658 not in address library
 				return func(this, a_data);
 			}
 
