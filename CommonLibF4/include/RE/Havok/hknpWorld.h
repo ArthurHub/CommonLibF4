@@ -439,6 +439,18 @@ namespace RE
 			func(this, a_bodyId, a_motionPropertiesId);
 		}
 
+		/// Assign a body to a different motion slot.
+		/// Used when transferring bodies between motion groups (e.g., compound objects).
+		///
+		/// @param a_bodyId    Body to reassign
+		/// @param a_motionId  New motion index
+		void SetBodyMotion(hknpBodyId a_bodyId, std::uint32_t a_motionId)
+		{
+			typedef void func_t(hknpWorld*, hknpBodyId, std::uint32_t);
+			static REL::Relocation<func_t> func{ REL::ID(618186) };
+			func(this, a_bodyId, a_motionId);
+		}
+
 		/// Get a body's axis-aligned bounding box.
 		/// Output is 32 bytes: 16 bytes min (hkVector4f), 16 bytes max (hkVector4f).
 		void GetBodyAabb(hknpBodyId a_bodyId, void* a_aabbOut)
@@ -446,6 +458,20 @@ namespace RE
 			typedef void func_t(hknpWorld*, hknpBodyId, void*);
 			static REL::Relocation<func_t> func{ REL::ID(249572) };
 			func(this, a_bodyId, a_aabbOut);
+		}
+
+		/// Predict a body's future transform at a given time delta.
+		/// Uses current or previous-step velocities depending on dt magnitude.
+		/// Useful for rendering interpolation between physics steps.
+		///
+		/// @param a_bodyId       Body to predict
+		/// @param a_deltaTime    Time delta for prediction (seconds)
+		/// @param a_transformOut [out] Predicted transform (16 floats: 3x4 rotation + translation)
+		void PredictBodyTransform(hknpBodyId a_bodyId, float a_deltaTime, float* a_transformOut)
+		{
+			typedef void func_t(hknpWorld*, hknpBodyId, float, float*);
+			static REL::Relocation<func_t> func{ REL::ID(823517) };
+			func(this, a_bodyId, a_deltaTime, a_transformOut);
 		}
 
 		// =====================================================================
@@ -557,6 +583,22 @@ namespace RE
 			typedef void func_t(hknpWorld*, hknpBodyId, float*, float*, float, float*, float*);
 			static REL::Relocation<func_t> func{ REL::ID(865502) };
 			func(this, a_bodyId, a_targetPos, a_targetRot, a_deltaTime, a_linVelOut, a_angVelOut);
+		}
+
+		/// Full hard keyframe wrapper: lock -> ComputeHardKeyFrame -> SetBodyVelocity -> unlock.
+		/// Convenience method that does the complete keyframe tracking in one call.
+		/// Prefer this over manually calling ComputeHardKeyFrame + SetBodyVelocity when
+		/// you don't need the intermediate velocity values.
+		///
+		/// @param a_bodyId    Keyframed body to track
+		/// @param a_targetPos Target position (float[4], Havok space)
+		/// @param a_targetRot Target rotation (float[4], quaternion xyzw)
+		/// @param a_deltaTime Frame delta time
+		void ApplyHardKeyFrame(hknpBodyId a_bodyId, float* a_targetPos, float* a_targetRot, float a_deltaTime)
+		{
+			typedef void func_t(hknpWorld*, hknpBodyId, float*, float*, float);
+			static REL::Relocation<func_t> func{ REL::Offset(0x153ABD0) };
+			func(this, a_bodyId, a_targetPos, a_targetRot, a_deltaTime);
 		}
 
 		// =====================================================================

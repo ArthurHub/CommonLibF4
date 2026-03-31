@@ -21,8 +21,8 @@ This documents the comprehensive Havok 2014 (New Physics / hknp) API additions m
 Body descriptor struct (0x90 bytes per body). Bodies live in a flat array at hknpWorld+0x20.
 
 Key fields:
-- `+0x28` = shape pointer (hknpShape*)
-- `+0x40` = userData (often TESObjectREFR*, MUST validate before dereferencing)
+- `+0x48` = shape pointer (hknpShape*)
+- `+0x88` = userData (often TESObjectREFR*, MUST validate before dereferencing)
 - `+0x68` = motionIndex (indexes into motion array, 0 = shared static)
 - `+0x72` = motionPropertiesId (lower byte: 0=STATIC, 1=DYNAMIC, 2=KEYFRAMED)
 
@@ -36,10 +36,11 @@ Motion data struct (0x80 bytes per motion). Motions live at hknpWorld+0xE0.
 Key fields:
 - `+0x00` = position (hkVector4f, Havok space)
 - `+0x10` = orientation quaternion
-- `+0x20` = linear velocity
-- `+0x30` = angular velocity
-- `+0x60` = inverse mass and inertia
-- `+0x7C` = timeFactor (0 = frozen, 1 = normal)
+- `+0x20` = packed inverse inertia (int16[4], NOT velocity!)
+- `+0x40` = linear velocity (hkVector4f, world-space)
+- `+0x50` = angular velocity (hkVector4f, body-local, 2x scaled)
+- `+0x60` = previousStepLinearVelocity (hkVector4f, sub-step interpolation)
+- `+0x70` = previousStepAngularVelocity (hkVector4f, body-local)
 
 Motion index 0 is the shared static motion (all static bodies use it).
 

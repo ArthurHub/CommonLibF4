@@ -47,6 +47,7 @@ set(SOURCES
 	include/RE/Bethesda/BSFadeNode.h
 	include/RE/Bethesda/BSFixedString.h
 	include/RE/Bethesda/BSGeometry.h
+	include/RE/Bethesda/BSSkin.h
 	include/RE/Bethesda/BSGraphics.h
 	include/RE/Bethesda/BSGraphicsUtility.h
 	include/RE/Bethesda/BSHavok.h

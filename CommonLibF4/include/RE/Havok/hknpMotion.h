@@ -32,7 +32,7 @@
 //   float speed = motion->linearVelocity.Length();
 //
 //   // Check if motion is active (not sleeping)
-//   bool active = (motion->spaceSplitterWeight > 0.0f);
+//   bool active = (motion->deactivationState == 0);  // deactivationState at +0x3E
 
 #include "RE/Havok/hkVector4.h"
 
@@ -56,7 +56,7 @@ namespace RE
 	///   +0x10  hkVector4f  orientation quaternion (x, y, z, w)
 	///   +0x20  int16[4]    packed inverse inertia [invInertiaX, Y, Z, invMass]
 	///   +0x28  uint32      firstBodyId
-	///   +0x2C  uint32      inverseMassOrState
+	///   +0x2C  uint32      deactivationListIndex (sentinel = 0x7FFFFFFF)
 	///   +0x30  uint64      internalData
 	///   +0x38  uint16      motionPropertiesId (2=KEYFRAMED)
 	///   +0x3A  uint16      maxLinearVelocity (half-float)
@@ -65,11 +65,8 @@ namespace RE
 	///   +0x3F  uint8       activationTickCounter
 	///   +0x40  hkVector4f  LINEAR VELOCITY (world-space, Havok units/sec)
 	///   +0x50  hkVector4f  ANGULAR VELOCITY (body-local, 2x scaled)
-	///   +0x60  hkVector4f  integrationAccumulators
-	///   +0x70  float       spaceSplitterWeight
-	///   +0x74  float       maxLinearAccelerationDistancePerStep
-	///   +0x78  float       maxRotationToPreventTunneling
-	///   +0x7C  float       timeFactor
+	///   +0x60  hkVector4f  previousStepLinearVelocity (SDK hknpPatches.cxx:1334)
+	///   +0x70  hkVector4f  previousStepAngularVelocity (SDK hknpPatches.cxx:1335)
 	struct hknpMotion
 	{
 	public:
@@ -90,8 +87,11 @@ namespace RE
 		// +0x28: First body ID that references this motion.
 		std::uint32_t firstBodyId;    // 28
 
-		// +0x2C: Inverse mass or motion state flag.
-		std::uint32_t inverseMassOrState;  // 2C
+		// +0x2C: Deactivation list index — index into the deactivation island's body list.
+		// Initialized to 0x7FFFFFFF (sentinel = "not in any deactivation list").
+		// Ghidra-verified 2026-03-30: used as list index by deactivation functions,
+		// NOT as inverse mass or state flag.
+		std::uint32_t deactivationListIndex;  // 2C
 
 		// +0x30: Internal data used by the solver.
 		std::uint64_t internalData;   // 30
@@ -122,14 +122,24 @@ namespace RE
 		// WARNING: This is at +0x50, NOT +0x30.
 		hkVector4f angularVelocity;   // 50
 
-		// +0x60: Integration accumulators (solver internal).
-		hkVector4f integrationAccumulators;  // 60
+		// +0x60: Previous physics step's linear velocity (world-space, Havok units/sec).
+		// Used by predictBodyTransform for sub-step interpolation: small dt uses this
+		// (previous step), large dt uses current linearVelocity at +0x40.
+		// Initialized to zero (no previous step at creation). Updated by the solver
+		// during physics step, NOT by user-facing SetBodyLinearVelocity.
+		// Name confirmed by Havok SDK hknpPatches.cxx line 1334: "previousStepLinearVelocity"
+		hkVector4f previousStepLinearVelocity;  // 60
 
-		// +0x70: Additional motion properties
-		float spaceSplitterWeight;     // 70 — island/deactivation weight (0 = sleeping)
-		float maxLinearAccelerationDistancePerStep;  // 74
-		float maxRotationToPreventTunneling;         // 78
-		float timeFactor;              // 7C — time scale (1.0 = normal, 0.0 = frozen)
+		// +0x70: Previous physics step's angular velocity (body-local, 2x scaled).
+		// Used by predictBodyTransform for sub-step interpolation alongside +0x60.
+		// Ghidra-verified 2026-03-31: MULPS xmmword ptr [RBX+0x70] in predictBodyTransform
+		// proves this is a single 16-byte SIMD vector, NOT 4 independent scalar fields.
+		//
+		// IMPORTANT: The previous names here (spaceSplitterWeight, maxLinearAcceleration,
+		// maxRotationToPreventTunneling, timeFactor) belong to hknpMotionProperties —
+		// a DIFFERENT Havok struct. They were incorrectly placed in hknpMotion.
+		// Name confirmed by Havok SDK hknpPatches.cxx line 1335: "previousStepAngularVelocity"
+		hkVector4f previousStepAngularVelocity;  // 70
 	};
 	static_assert(sizeof(hknpMotion) == 0x80);
 

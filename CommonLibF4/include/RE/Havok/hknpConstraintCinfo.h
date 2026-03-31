@@ -88,12 +88,12 @@ namespace RE
 		std::uint32_t      bodyIdB;          // 04 — second body
 		hkpConstraintData* constraintData;   // 08 — ref-counted constraint data
 		std::uint32_t      constraintId;     // 10 — ID returned by CreateConstraint
-		std::uint16_t      pad14;            // 14 — (0xFFFF initially)
+		std::uint16_t      nextFreeLink;     // 14 — free list link (0xFFFF = active/in-use)
 		std::uint8_t       flags;            // 16 — bit 0x04 = disabled
 		std::uint8_t       constraintType;   // 17 — type from constraintData vtable
-		std::uint64_t      solverInfo;       // 18 — solver-specific data
-		std::uint16_t      solverInfo2;      // 20
-		std::int16_t       atomSize;         // 22 — total atom size
+		void*              atomChainPtr;     // 18 — pointer to constraint atom chain
+		std::uint16_t      schemaSize;       // 20 — Jacobian schema workspace size
+		std::int16_t       sizeOfSchemas;    // 22 — from hkpConstraintInfo.m_sizeOfSchemas (Ghidra-verified)
 		std::uint8_t       pad24;            // 24
 		std::uint8_t       pad25;            // 25
 		std::int16_t       runtimeSize;      // 26 — solver runtime data size
