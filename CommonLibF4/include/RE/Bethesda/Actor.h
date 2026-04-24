@@ -1372,6 +1372,12 @@ namespace RE
 		bool                                             trespassing;                  // 48A
 	};
 	static_assert(sizeof(Actor) == 0x490);
+	// f4sevr-port: lock down field offsets confirmed against f4sevr Forms.h.
+	// Note: f4sevr names the field at 0x428 `equipData` (typed `ActorEquipData*`); CommonLibF4VR
+	// names it `biped` (typed `BSTSmartPointer<BipedAnim>`). Both refer to the same 8-byte field —
+	// f4sevr's `ActorEquipData` and CommonLibF4VR's `BipedAnim` describe the same biped/equip slot data.
+	static_assert(offsetof(Actor, race) == 0x418);
+	static_assert(offsetof(Actor, biped) == 0x428);
 
 	class ActorEquipManager :
 		public BSTSingletonSDM<ActorEquipManager>,            // 00
