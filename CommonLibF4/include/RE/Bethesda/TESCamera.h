@@ -264,6 +264,19 @@ namespace RE
 			return func(this, a_state);
 		}
 
+		// f4sevr-port: reverse lookup of a TESCameraState* pointer to its enum index.
+		// Inlined from f4sevr SDK GameCamera.cpp:6 (just iterates cameraStates[]).
+		// Returns -1 if the pointer isn't one of the registered states.
+		[[nodiscard]] std::int32_t GetCameraStateId(const TESCameraState* a_state) const noexcept
+		{
+			for (std::int32_t i = 0; i < CameraStates::kTotal; ++i) {
+				if (cameraStates[i].get() == a_state) {
+					return i;
+				}
+			}
+			return -1;
+		}
+
 		// members
 		ActorHandle                                                          cameraTarget;                        // 064
 		BSTSmallArray<BSTSmartPointer<TESCameraState>, CameraStates::kTotal> tempReturnStates;                    // 068
