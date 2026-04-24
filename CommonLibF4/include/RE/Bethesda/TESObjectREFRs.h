@@ -309,6 +309,13 @@ namespace RE
 	struct LOADED_REF_DATA
 	{
 	public:
+		// f4sevr-port: SDK GameReferences.h declares only `kFlag_PhysicsInitialized = 1`
+		// on this `flags` field. CommonLibF4VR had the field but no named bits.
+		enum LoadedDataFlags : std::uint16_t
+		{
+			kLoadedDataFlag_PhysicsInitialized = 1u << 0,
+		};
+
 		// members
 		void*                 handleList;           // 00 - TODO
 		NiPointer<NiAVObject> data3D;               // 08
