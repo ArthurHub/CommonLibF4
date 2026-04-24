@@ -1379,6 +1379,22 @@ namespace RE
 	static_assert(offsetof(Actor, race) == 0x418);
 	static_assert(offsetof(Actor, biped) == 0x428);
 
+	// f4sevr-port: niFlags @ 0x2D0 (CommonLibF4VR-named) is what f4sevr/f4se SDK calls `actorFlags`.
+	// The SDK declares only a single named bit on this field (kFlag_Teammate at bit 26) plus the
+	// IsPlayerTeammate() accessor. Other bits are unnamed there. We expose the same enum + accessor
+	// as a free function-style helper so VR mods previously using F4SEVR::Actor can migrate.
+	// Note: distinct from BOOL_FLAGS @ 0x43C — that's a different uint32 (boolFlags) with its own
+	// 32 named bits (incl. kDoNotShowOnStealthMeter at bit 26 — same bit number, different field).
+	enum ActorFlagBits : std::uint32_t
+	{
+		kActorFlag_Teammate = 1u << 26,
+	};
+
+	[[nodiscard]] inline bool IsPlayerTeammate(const Actor& a_actor) noexcept
+	{
+		return (a_actor.niFlags.flags & kActorFlag_Teammate) == kActorFlag_Teammate;
+	}
+
 	class ActorEquipManager :
 		public BSTSingletonSDM<ActorEquipManager>,            // 00
 		public BSTEventSource<ActorEquipManagerEvent::Event>  // 08
