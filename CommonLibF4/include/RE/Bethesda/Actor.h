@@ -12,7 +12,9 @@
 #include "RE/Bethesda/BSTSingleton.h"
 #include "RE/Bethesda/BSTSmartPointer.h"
 #include "RE/Bethesda/BSTTuple.h"
+#include "RE/Bethesda/BGSInventoryItem.h"
 #include "RE/Bethesda/IMovementInterface.h"
+#include "RE/Bethesda/TESBoundObjects.h"
 #include "RE/Bethesda/TESObjectREFRs.h"
 #include "RE/NetImmerse/NiFlags.h"
 #include "RE/NetImmerse/NiPoint.h"
@@ -1393,6 +1395,49 @@ namespace RE
 	[[nodiscard]] inline bool IsPlayerTeammate(const Actor& a_actor) noexcept
 	{
 		return (a_actor.niFlags.flags & kActorFlag_Teammate) == kActorFlag_Teammate;
+	}
+
+	// f4sevr-port: f4sevr SDK GameReferences.cpp:39 — finds the equipped stack's ExtraDataList
+	// for the item in the given biped slot. Returns true if found and writes through a_outExtraData.
+	// Ported logic over CommonLibF4VR's BGSInventoryList::ForEachStack and the BIPOBJECT array.
+	//
+	// Slot indices are values of BIPED_OBJECT (0..kTotal=44). f4sevr uses ActorEquipData::kMaxSlots
+	// which equals BIPED_OBJECT::kTotal in this codebase.
+	inline bool GetEquippedExtraData(Actor& a_actor, std::uint32_t a_slotIndex, ExtraDataList** a_outExtraData)
+	{
+		if (!a_outExtraData) {
+			return false;
+		}
+		*a_outExtraData = nullptr;
+		if (a_slotIndex >= static_cast<std::uint32_t>(std::to_underlying(BIPED_OBJECT::kTotal))) {
+			return false;
+		}
+		const auto biped = a_actor.biped.get();
+		if (!biped) {
+			return false;
+		}
+		// f4sevr's `slots[i].item` (TESForm*) ≡ CommonLibF4VR's `object[i].parent.object` (TESForm*).
+		const auto* slotItem = biped->object[a_slotIndex].parent.object;
+		if (!slotItem || !a_actor.inventoryList) {
+			return false;
+		}
+
+		a_actor.inventoryList->ForEachStack(
+			[slotItem](BGSInventoryItem& a_invItem) {
+				// CommonLibF4VR types invItem.object as TESBoundObject*; compare by base TESForm*.
+				return static_cast<const TESForm*>(a_invItem.object) == slotItem;
+			},
+			[a_outExtraData](BGSInventoryItem& /*a_invItem*/, BGSInventoryItem::Stack& a_stack) {
+				if (a_stack.IsEquipped()) {
+					if (auto* ed = a_stack.extra.get()) {
+						*a_outExtraData = ed;
+					}
+					return false;  // stop iteration
+				}
+				return true;  // keep going
+			});
+
+		return *a_outExtraData != nullptr;
 	}
 
 	class ActorEquipManager :
