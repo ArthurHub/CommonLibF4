@@ -911,6 +911,18 @@ namespace RE
 		TESFormID                                formID;           // 14
 		std::uint16_t                            inGameFormFlags;  // 18
 		REX::EnumSet<ENUM_FORM_ID, std::uint8_t> formType;         // 1A
+
+		// f4sevr-port: named bits on `formFlags`. CommonLibF4VR exposes these via virtual
+		// accessors (GetKnown, GetDelete, etc.) but the constants themselves were unnamed.
+		// f4sevr SDK GameForms.h:459-463 names these five.
+		enum FormFlags : std::uint32_t
+		{
+			kFormFlag_IsDeleted   = 1u << 5,
+			kFormFlag_PlayerKnows = 1u << 6,
+			kFormFlag_Persistent  = 1u << 10,
+			kFormFlag_IsDisabled  = 1u << 11,
+			kFormFlag_NoHavok     = 1u << 29,
+		};
 	};
 	static_assert(sizeof(TESForm) == 0x20);
 
