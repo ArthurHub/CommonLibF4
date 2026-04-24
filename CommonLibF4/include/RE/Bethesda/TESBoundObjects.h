@@ -113,6 +113,10 @@ namespace RE
 		BGSSoundTagComponent    soundTagComponent;  // 60
 	};
 	static_assert(sizeof(TESBoundObject) == 0x68);
+	// f4sevr-port: lock down field offsets confirmed against f4sevr Forms.h
+	static_assert(offsetof(TESBoundObject, objectTemplate) == 0x30);
+	static_assert(offsetof(TESBoundObject, previewTransform) == 0x50);
+	static_assert(offsetof(TESBoundObject, soundTagComponent) == 0x60);
 
 	class __declspec(novtable) BGSComponent :
 		public TESBoundObject,      // 00

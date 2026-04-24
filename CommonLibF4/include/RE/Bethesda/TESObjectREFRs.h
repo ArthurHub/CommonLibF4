@@ -954,11 +954,17 @@ namespace RE
 		LOADED_REF_DATA*               loadedData;     // 0F0
 		BGSInventoryList*              inventoryList;  // 0F8
 		BSTSmartPointer<ExtraDataList> extraList;      // 100
-		std::uint16_t                  refScale;       // 018
+		std::uint16_t                  refScale;       // 108 (f4sevr-port: was commented `// 018`, fixed comment typo)
 		std::int8_t                    modelState;     // 10A
 		bool                           predestroyed;   // 10B
 	};
 	static_assert(sizeof(TESObjectREFR) == 0x110);
+	// f4sevr-port: lock down field offsets confirmed against f4sevr Forms.h
+	static_assert(offsetof(TESObjectREFR, parentCell) == 0xB8);
+	static_assert(offsetof(TESObjectREFR, data) == 0xC0);
+	static_assert(offsetof(TESObjectREFR, loadedData) == 0xF0);
+	static_assert(offsetof(TESObjectREFR, inventoryList) == 0xF8);
+	static_assert(offsetof(TESObjectREFR, extraList) == 0x100);
 
 	class __declspec(novtable) Explosion :
 		public TESObjectREFR  // 000
