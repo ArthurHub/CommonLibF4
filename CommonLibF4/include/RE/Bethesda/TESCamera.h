@@ -297,4 +297,7 @@ namespace RE
 		bool                                                                 savedFadeOutCloseActors;             // 1AC
 	};
 	static_assert(sizeof(PlayerCamera) == 0x1B0);
+	// f4sevr-port: lock down field offsets confirmed against f4sevr Forms.h
+	static_assert(offsetof(PlayerCamera, cameraStates) == 0xE0);
+	static_assert(offsetof(PlayerCamera, cameraBodyID) == 0x148);
 }
