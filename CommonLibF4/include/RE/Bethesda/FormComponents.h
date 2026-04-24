@@ -713,10 +713,20 @@ namespace RE
 	struct __declspec(novtable) BIPED_MODEL
 	{
 	public:
+		// f4sevr-port: weightClass exists in the source SDK (kept named instead of pad).
+		// Init value at construction is 2 (= kWeightNone).
+		enum WeightClass : std::uint32_t
+		{
+			kWeightLight = 0,
+			kWeightHeavy = 1,
+			kWeightNone  = 2,
+		};
+
 		// members
 		std::uint32_t bipedObjectSlots;  // 0
+		std::uint32_t weightClass;       // 4 (f4sevr-port: was undeclared/padding)
 	};
-	static_assert(sizeof(BIPED_MODEL) == 0x4);
+	static_assert(sizeof(BIPED_MODEL) == 0x8);
 
 	class __declspec(novtable) BGSBipedObjectForm :
 		public BaseFormComponent  // 00
@@ -727,8 +737,23 @@ namespace RE
 
 		[[nodiscard]] std::uint32_t GetFilledSlots() const noexcept { return bipedModelData.bipedObjectSlots; }
 
+		// f4sevr-port: slot-mask mutators (f4sevr Forms.h: GetSlotMask/SetSlotMask/AddSlotToMask/RemoveSlotFromMask).
+		// Same semantics as GetFilledSlots above for the read path.
+		[[nodiscard]] std::uint32_t GetSlotMask() const noexcept { return bipedModelData.bipedObjectSlots; }
+		void                        SetSlotMask(std::uint32_t a_mask) noexcept { bipedModelData.bipedObjectSlots = a_mask; }
+		std::uint32_t               AddSlotToMask(std::uint32_t a_slot) noexcept
+		{
+			bipedModelData.bipedObjectSlots |= a_slot;
+			return bipedModelData.bipedObjectSlots;
+		}
+		std::uint32_t RemoveSlotFromMask(std::uint32_t a_slot) noexcept
+		{
+			bipedModelData.bipedObjectSlots &= ~a_slot;
+			return bipedModelData.bipedObjectSlots;
+		}
+
 		// members
-		BIPED_MODEL bipedModelData;  // 08
+		BIPED_MODEL bipedModelData;  // 08 (now 8 bytes incl. weightClass)
 	};
 	static_assert(sizeof(BGSBipedObjectForm) == 0x10);
 
