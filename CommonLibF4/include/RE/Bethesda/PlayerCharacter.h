@@ -457,7 +457,13 @@ namespace RE
 		float                                                         grabDistance;                         // B64
 		std::uint32_t                                                 secondsToSleepPerUpdate;              // B68
 		std::uint32_t                                                 sleepSeconds;                         // B6C
-		BSTSmartPointer<BipedAnim>                                    firstPersonBipedAnim;                 // B70
+#ifdef ENABLE_FALLOUT_VR
+		// f4sevr-port: VR inserts 0x470 bytes of player-specific state here (HMD tracking,
+		// controller-hand bone refs, IK rig data, etc.). All fields below are shifted by +0x470.
+		// f4sevr Forms.h asserts in VR: firstPersonBipedAnim @ 0xFE0, tintingData @ 0x1170.
+		std::byte                                                     vrPlayerStatePadding[0x470];          // B70 (VR only)
+#endif
+		BSTSmartPointer<BipedAnim>                                    firstPersonBipedAnim;                 // flat: B70  vr: FE0
 		NiPointer<NiNode>                                             firstPerson3D;                        // B78
 		NiAVObject*                                                   firstPersonTorso;                     // B80
 		NiAVObject*                                                   firstPersonEye;                       // B88
@@ -604,5 +610,13 @@ namespace RE
 		bool                                                          playingTimeFrozen: 1;                 // E02:5
 		bool                                                          everModded: 1;                        // E02:6
 	};
+#ifdef ENABLE_FALLOUT_VR
+	// f4sevr-port: VR layout — 0x470 of VR-specific state shifts all post-0xB70 fields.
+	static_assert(sizeof(PlayerCharacter) == 0x1280);
+	static_assert(offsetof(PlayerCharacter, firstPersonBipedAnim) == 0xFE0);
+	static_assert(offsetof(PlayerCharacter, firstPerson3D) == 0xFE8);
+	static_assert(offsetof(PlayerCharacter, tintingData) == 0x1170);
+#else
 	static_assert(sizeof(PlayerCharacter) == 0xE10);
+#endif
 }
