@@ -1128,6 +1128,13 @@ namespace RE
 		static constexpr auto VTABLE{ VTABLE::TESObjectARMA };
 		static constexpr auto FORM_ID{ ENUM_FORM_ID::kARMA };
 
+		// f4sevr-port: SDK GameObjects.cpp:7 — formats a node-name suffix string from
+		// this addon's formID, the NPC's sex, and the parent armor's formID.
+		// Original signature: bool GetNodeName(char* dest, TESNPC* npc, TESObjectARMO* armor).
+		// Buffer must be at least MAX_PATH bytes (260). Defined inline at end of header
+		// (after TESNPC + TESObjectARMO are fully visible).
+		bool GetNodeName(char* a_dstBuff, std::size_t a_buffSize, TESNPC* a_npc, TESObjectARMO* a_armor);
+
 		// members
 		OBJ_ARMA                             data;                     // 040
 		BGSModelMaterialSwap                 bipedModel[2];            // 050
