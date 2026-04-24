@@ -212,6 +212,10 @@ namespace RE
 		BGSAttachParentArray attachParents;  // 2C8
 	};
 	static_assert(sizeof(TESObjectARMO) == 0x2E0);
+	// f4sevr-port: lock down field offsets confirmed against f4sevr Forms.h
+	static_assert(offsetof(TESObjectARMO, armorData) == 0x250);
+	static_assert(offsetof(TESObjectARMO, modelArray) == 0x2A8);
+	static_assert(offsetof(TESObjectARMO, attachParents) == 0x2C8);
 
 	struct OBJ_BOOK
 	{
