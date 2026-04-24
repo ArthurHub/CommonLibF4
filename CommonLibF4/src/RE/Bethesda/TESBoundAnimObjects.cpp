@@ -3,8 +3,24 @@
 #include "RE/Bethesda/PlayerCharacter.h"
 #include "RE/Bethesda/TESRace.h"
 
+#include <cstdio>
+
 namespace RE
 {
+	// f4sevr-port: SDK GameObjects.cpp:7. Defined here (not in TESBoundObjects.h)
+	// because it needs full TESNPC for GetSex(). Buffer size made explicit; SDK
+	// hardcoded MAX_PATH=260, callers should pass at least that.
+	bool TESObjectARMA::GetNodeName(char* a_dstBuff, std::size_t a_buffSize, TESNPC* a_npc, TESObjectARMO* a_armor)
+	{
+		if (!a_dstBuff || a_buffSize == 0 || !a_npc || !a_armor) {
+			return false;
+		}
+		const auto sex = std::to_underlying(a_npc->GetSex());
+		std::snprintf(a_dstBuff, a_buffSize, " (%08X)[%d]/ (%08X)", formID, sex, a_armor->formID);
+		return true;
+	}
+
+
 	void TESNPC::CopyPerkRankArray(const std::vector<PerkRankData>& a_copiedData)
 	{
 		const auto oldData = perks;
