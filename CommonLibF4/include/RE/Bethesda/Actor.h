@@ -378,9 +378,21 @@ namespace RE
 		ActiveEffectList                                                                           activeEffects;                                  // 238
 		BSTSmartPointer<BSAnimationGraphManager>                                                   animationGraphManager;                          // 258
 		BSAnimationGraphVariableCache*                                                             animationVariableCache;                         // 260
-		BSTArray<SubGraphIdleRootData>                                                             subGraphIdleManagerRoots;                       // 268
-		BSSpinLock                                                                                 equippedItemsLock;                              // 280
-		BSTArray<EquippedItem>                                                                     equippedItems;                                  // 288
+#ifdef ENABLE_FALLOUT_VR
+		// f4sevr-port: VR inserts 8 bytes of state here (a single qword, init'd to 0 by the
+		// MiddleHighProcessData ctor at FUN_140ed8370 via `*(_QWORD *)(a1 + 616) = 0`). The
+		// destructor never touches it, so it's a non-owning POD — likely a void* / handle.
+		// All fields from subGraphIdleManagerRoots onward are shifted by +8 in VR vs flat.
+		// Verified against Fallout4VR.exe via IDA:
+		//   AIProcess::GetEquippedItems       → middleHigh + 0x290 (BSTArray<EquippedItem>)
+		//   FUN_140ecf0a0 (lock getter)        → middleHigh + 0x288 (equippedItemsLock)
+		//   AIProcess::AccessClothExtraDataCache → middleHigh + 0x2A8 (clothExtraDataCache)
+		// The shift cascades to the end of the struct (sizeof grows from 0x4C0 to 0x4C8).
+		std::byte                                                                                  vrPostAnimVarCachePadding[0x8];                 // 268 (VR only)
+#endif
+		BSTArray<SubGraphIdleRootData>                                                             subGraphIdleManagerRoots;                       // flat: 268  vr: 270
+		BSSpinLock                                                                                 equippedItemsLock;                              // flat: 280  vr: 288
+		BSTArray<EquippedItem>                                                                     equippedItems;                                  // flat: 288  vr: 290
 		BSTArray<BSClothExtraData*>                                                                clothExtraDataCache;                            // 2A0
 		BSTArray<BSTSmallArray<SubgraphHandle, 2>>                                                 subGraphHandles;                                // 2B8
 		BSTSmallArray<SubgraphIdentifier, 2>                                                       currentDefaultSubGraphID;                       // 2D0
@@ -474,7 +486,17 @@ namespace RE
 		bool                                                                                       avoidPlayer;                                    // 4BA
 		bool                                                                                       usingPathingFaceTargetWhileTrackingOutOfRange;  // 4BB
 	};
+#ifdef ENABLE_FALLOUT_VR
+	// f4sevr-port: VR adds 8 bytes after animationVariableCache (offset 0x268); everything from
+	// subGraphIdleManagerRoots onward shifts by +8.
+	static_assert(sizeof(MiddleHighProcessData) == 0x4C8);
+	static_assert(offsetof(MiddleHighProcessData, subGraphIdleManagerRoots) == 0x270);
+	static_assert(offsetof(MiddleHighProcessData, equippedItemsLock) == 0x288);
+	static_assert(offsetof(MiddleHighProcessData, equippedItems) == 0x290);
+	static_assert(offsetof(MiddleHighProcessData, clothExtraDataCache) == 0x2A8);
+#else
 	static_assert(sizeof(MiddleHighProcessData) == 0x4C0);
+#endif
 
 	class CachedValueData
 	{
