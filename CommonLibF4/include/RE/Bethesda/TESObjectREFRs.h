@@ -985,6 +985,42 @@ namespace RE
 	static_assert(offsetof(TESObjectREFR, inventoryList) == 0xF8);
 	static_assert(offsetof(TESObjectREFR, extraList) == 0x100);
 
+	// f4sevr-port: name aliases for callers migrating from F4SEVR::TESObjectREFR /
+	// F4SEVR::Actor. These forward to the (already-virtual) CommonLibF4VR methods at the
+	// matching vtable slot, so they dispatch to the same physical game function. Defined
+	// as inline non-virtual to avoid changing the C++ source-level vtable layout.
+	//
+	//   f4sevr name (slot)     ↔ CommonLibF4VR name
+	//   GetMarkerPosition (7B) ↔ GetLookingAtLocation
+	//   GetActorRootNode  (8B) ↔ Get3D(bool)
+	//   GetObjectRootNode (8C) ↔ Get3D()
+	//   GetActorRace      (91) ↔ GetVisualsRace
+	//
+	// NiNode* returns use reinterpret_cast on the NiAVObject* that CommonLibF4VR exposes;
+	// the runtime always returns a NiNode here per f4sevr's signature, and NiNode is
+	// single-inheritance from NiAVObject so the bit-cast is correct.
+	inline void GetMarkerPosition(const TESObjectREFR& a_ref, NiPoint3* a_outPos)
+	{
+		if (a_outPos) {
+			*a_outPos = a_ref.GetLookingAtLocation();
+		}
+	}
+
+	[[nodiscard]] inline NiNode* GetActorRootNode(const TESObjectREFR& a_ref, bool a_firstPerson)
+	{
+		return reinterpret_cast<NiNode*>(a_ref.Get3D(a_firstPerson));
+	}
+
+	[[nodiscard]] inline NiNode* GetObjectRootNode(const TESObjectREFR& a_ref)
+	{
+		return reinterpret_cast<NiNode*>(a_ref.Get3D());
+	}
+
+	[[nodiscard]] inline TESRace* GetActorRace(const TESObjectREFR& a_ref)
+	{
+		return a_ref.GetVisualsRace();
+	}
+
 	// f4sevr-port: SDK GameReferences.cpp:25 — returns the raw handle ID for a TESObjectREFR.
 	// CommonLibF4VR has the equivalent functionality via `ObjectRefHandle{refr}` followed by
 	// `.native_handle()` (the BSPointerHandle constructor calls the same game RVA internally).
