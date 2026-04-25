@@ -635,7 +635,15 @@ namespace RE
 		virtual bool                              ShouldSaveAnimationOnSaving() const;                                                                                                                                                                                             // 9D
 		virtual bool                              ShouldPerformRevert() const { return true; }                                                                                                                                                                                     // 9E
 		virtual void                              UpdateAnimation(float a_delta);                                                                                                                                                                                                  // 9F
-		virtual void                              CollectPickNodes() { return; }                                                                                                                                                                                                   // A0
+		// f4sevr-port: vtable slot A0 was previously declared `CollectPickNodes() → void` here.
+		// f4sevr SDK GameReferences.h:151 declares this slot as
+		// `ActorEquipData** GetEquipData(bool bFirstPerson)`. Replacing per user direction
+		// (f4sevr is the authoritative interpretation for VR). The return is a pointer to the
+		// 8-byte BSTSmartPointer<BipedAnim> field on Actor (or PlayerCharacter::firstPersonBipedAnim
+		// when bFirstPerson=true) — bit-equivalent to f4sevr's ActorEquipData** but typed via
+		// CommonLibF4VR's BipedAnim. CollectPickNodes had zero callers in CommonLibF4VR, so the
+		// rename is safe.
+		virtual BSTSmartPointer<BipedAnim>* GetEquipData(bool a_firstPerson);                                                                                                                                                                                                      // A0
 		virtual const BSTSmartPointer<BipedAnim>& GetBiped() const;                                                                                                                                                                                                                // A2
 		virtual const BSTSmartPointer<BipedAnim>& GetBiped(bool a_firstPerson) const;                                                                                                                                                                                              // A1
 		virtual const BSTSmartPointer<BipedAnim>& GetCurrentBiped() const { return GetBiped(); }                                                                                                                                                                                   // A3
