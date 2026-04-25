@@ -427,7 +427,11 @@ namespace RE
 		BGSObjectInstance       parent;       // 00
 		BGSObjectInstanceExtra* modExtra;     // 10
 		TESObjectARMA*          armorAddon;   // 18
-		TESModel*               part;         // 20
+		// f4sevr-port: refined from TESModel* → BGSModelMaterialSwap* per f4sevr SDK
+		// GameFormComponents.h:1441 (named `modelMatSwap` there). BGSModelMaterialSwap
+		// inherits TESModel, so existing TESModel-typed access still works through the
+		// base; this just exposes the swapForm + colorRemappingIndex fields.
+		BGSModelMaterialSwap*   part;         // 20
 		BGSTextureSet*          skinTexture;  // 28
 		NiPointer<NiAVObject>   partClone;    // 30
 		void*                   handleList;   // 38 - TODO: BSModelDB::HandleListHead
