@@ -973,6 +973,20 @@ namespace RE
 	static_assert(offsetof(TESObjectREFR, inventoryList) == 0xF8);
 	static_assert(offsetof(TESObjectREFR, extraList) == 0x100);
 
+	// f4sevr-port: SDK GameReferences.cpp:25 — returns the raw handle ID for a TESObjectREFR.
+	// CommonLibF4VR has the equivalent functionality via `ObjectRefHandle{refr}` followed by
+	// `.native_handle()` (the BSPointerHandle constructor calls the same game RVA internally).
+	// This wrapper preserves the f4sevr API surface, including the refcount==0 → invalid-handle
+	// short-circuit. Returns the default invalid handle value for null/dead refs.
+	[[nodiscard]] inline std::uint32_t CreateRefHandle(TESObjectREFR* a_refr) noexcept
+	{
+		// TESObjectREFR inherits BSHandleRefObject, so QRefCount() is on the ref itself.
+		if (!a_refr || a_refr->QRefCount() == 0) {
+			return ObjectRefHandle{}.native_handle();
+		}
+		return ObjectRefHandle{ a_refr }.native_handle();
+	}
+
 	class __declspec(novtable) Explosion :
 		public TESObjectREFR  // 000
 	{
