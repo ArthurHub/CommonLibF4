@@ -47,21 +47,21 @@
 // All REL::IDs verified against fo4_database.csv for Fallout 4 VR.
 // Ghidra RE on Fallout4VR.exe.unpacked.exe.
 
+#include "RE/Bethesda/bhkCharacterController.h"
 #include "RE/Havok/hkArray.h"
 #include "RE/Havok/hkVector4.h"
 #include "RE/Havok/hknpAabbQuery.h"
 #include "RE/Havok/hknpBody.h"
-#include "RE/Havok/hknpBodyId.h"
 #include "RE/Havok/hknpBodyCinfo.h"
+#include "RE/Havok/hknpBodyId.h"
 #include "RE/Havok/hknpCollisionResult.h"
 #include "RE/Havok/hknpConstraintCinfo.h"
 #include "RE/Havok/hknpMaterialId.h"
 #include "RE/Havok/hknpMotion.h"
-#include "RE/Bethesda/bhkCharacterController.h"
 
 namespace RE
 {
-	class hknpBody;
+	struct hknpBody;
 	class hknpCollisionQueryCollector;
 	class hknpShape;
 
@@ -86,9 +86,9 @@ namespace RE
 	public:
 		enum Enum
 		{
-			kContact = 3,                          ///< Contact/collision events (FOCollisionListener uses this)
-			kIslandActivation = 0xB,               ///< Simulation island activated/deactivated
-			kBroadPhaseExit = 0xC,                 ///< Body left the broadphase region
+			kContact = 3,                             ///< Contact/collision events (FOCollisionListener uses this)
+			kIslandActivation = 0xB,                  ///< Simulation island activated/deactivated
+			kBroadPhaseExit = 0xC,                    ///< Body left the broadphase region
 			kBreakableConstraintForceExceeded = 0x16  ///< Breakable constraint exceeded its force threshold
 		};
 	};
@@ -118,7 +118,7 @@ namespace RE
 		/// Construct a new physics world with the given configuration.
 		hknpWorld(hknpWorldCinfo& a_cinfo)
 		{
-			typedef hknpWorld* func_t(hknpWorld*, hknpWorldCinfo&);
+			typedef hknpWorld*             func_t(hknpWorld*, hknpWorldCinfo&);
 			static REL::Relocation<func_t> func{ REL::ID(864328) };
 			func(this, a_cinfo);
 		}
@@ -126,7 +126,7 @@ namespace RE
 		/// Destroy the world and all contained bodies/constraints.
 		~hknpWorld()
 		{
-			typedef void func_t(hknpWorld*);
+			typedef void                   func_t(hknpWorld*);
 			static REL::Relocation<func_t> func{ REL::ID(748654) };
 			func(this);
 		}
@@ -226,7 +226,7 @@ namespace RE
 		/// directly — they are declared but have no compiled implementations in the game binary.
 		void QueryAabb(hknpAabbQuery* a_query, hknpCollisionQueryCollector* a_collector)
 		{
-			typedef void func_t(hknpWorld*, hknpAabbQuery*, hknpCollisionQueryCollector*);
+			typedef void                   func_t(hknpWorld*, hknpAabbQuery*, hknpCollisionQueryCollector*);
 			static REL::Relocation<func_t> func{ REL::ID(990501) };
 			func(this, a_query, a_collector);
 		}
@@ -239,7 +239,7 @@ namespace RE
 		/// @param a_hitsOut   Array that receives body IDs of overlapping bodies
 		void QueryAabb(hknpAabbQuery* a_query, hkArray<hknpBodyId>* a_hitsOut)
 		{
-			typedef void func_t(hknpWorld*, hknpAabbQuery*, hkArray<hknpBodyId>*);
+			typedef void                   func_t(hknpWorld*, hknpAabbQuery*, hkArray<hknpBodyId>*);
 			static REL::Relocation<func_t> func{ REL::ID(1536729) };
 			func(this, a_query, a_hitsOut);
 		}
@@ -271,14 +271,14 @@ namespace RE
 		std::uint32_t AllocateMotion()
 		{
 			// Construct default motion creation info (0x70 bytes)
-			alignas(16) std::uint8_t motionCinfo[0x70];
-			typedef void* motionCinfoCtor_t(void*);
+			alignas(16) std::uint8_t                  motionCinfo[0x70];
+			typedef void*                             motionCinfoCtor_t(void*);
 			static REL::Relocation<motionCinfoCtor_t> motionCinfoCtor{ REL::Offset(0x17A2FC0) };
 			motionCinfoCtor(motionCinfo);
 
 			// Allocate and initialize motion from the world's motion manager
-			std::int32_t motionId = 0;
-			typedef std::int32_t* allocMotion_t(hknpWorld*, std::int32_t*, void*);
+			std::int32_t                          motionId = 0;
+			typedef std::int32_t*                 allocMotion_t(hknpWorld*, std::int32_t*, void*);
 			static REL::Relocation<allocMotion_t> allocMotion{ REL::Offset(0x1546350) };
 			allocMotion(this, &motionId, motionCinfo);
 
@@ -313,9 +313,9 @@ namespace RE
 		///   auto bodyId = world->CreateBody(cinfo);
 		hknpBodyId CreateBody(hknpBodyCinfo& a_cinfo, std::int32_t a_additionMode = 1, std::uint8_t a_flags = 0)
 		{
-			typedef hknpBodyId* func_t(hknpWorld*, hknpBodyId*, hknpBodyCinfo&, std::int32_t, std::uint8_t);
+			typedef hknpBodyId*            func_t(hknpWorld*, hknpBodyId*, hknpBodyCinfo&, std::int32_t, std::uint8_t);
 			static REL::Relocation<func_t> func{ REL::ID(72830) };
-			hknpBodyId bodyId;
+			hknpBodyId                     bodyId;
 			func(this, &bodyId, a_cinfo, a_additionMode, a_flags);
 			return bodyId;
 		}
@@ -328,7 +328,7 @@ namespace RE
 		/// @param a_activationMode 0 = default activation behavior
 		void RemoveBodies(hknpBodyId* a_bodyIds, std::int32_t a_count, std::int32_t a_activationMode = 0)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId*, std::int32_t, std::int32_t);
+			typedef void                   func_t(hknpWorld*, hknpBodyId*, std::int32_t, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(201384) };
 			func(this, a_bodyIds, a_count, a_activationMode);
 		}
@@ -341,7 +341,7 @@ namespace RE
 		/// @param a_activationMode 0 = default activation behavior
 		void DestroyBodies(hknpBodyId* a_bodyIds, std::int32_t a_count, std::int32_t a_activationMode = 0)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId*, std::int32_t, std::int32_t);
+			typedef void                   func_t(hknpWorld*, hknpBodyId*, std::int32_t, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(1037327) };
 			func(this, a_bodyIds, a_count, a_activationMode);
 		}
@@ -396,7 +396,7 @@ namespace RE
 		/// @param a_activationBehavior  0 = auto-activate if sleeping
 		void SetBodyTransform(hknpBodyId a_bodyId, hkTransformf& a_transform, std::int32_t a_activationBehavior = 0)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hkTransformf&, std::int32_t);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hkTransformf&, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(367136) };
 			func(this, a_bodyId, a_transform, a_activationBehavior);
 		}
@@ -404,7 +404,7 @@ namespace RE
 		/// Replace a body's collision shape.
 		void SetBodyShape(hknpBodyId a_bodyId, const hknpShape* a_shape)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, const hknpShape*);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, const hknpShape*);
 			static REL::Relocation<func_t> func{ REL::ID(531033) };
 			func(this, a_bodyId, a_shape);
 		}
@@ -414,7 +414,7 @@ namespace RE
 		/// @param a_rebuildCachesMode 0 = rebuild collision caches immediately
 		void SetBodyMaterial(hknpBodyId a_bodyId, hknpMaterialId a_materialId, std::int32_t a_rebuildCachesMode = 0)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hknpMaterialId, std::int32_t);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hknpMaterialId, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(50770) };
 			func(this, a_bodyId, a_materialId, a_rebuildCachesMode);
 		}
@@ -434,7 +434,7 @@ namespace RE
 		///   world->SetBodyMotionProperties(bodyId, { 1 });  // DYNAMIC
 		void SetBodyMotionProperties(hknpBodyId a_bodyId, hknpMotionPropertiesId_Handle a_motionPropertiesId)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hknpMotionPropertiesId_Handle);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hknpMotionPropertiesId_Handle);
 			static REL::Relocation<func_t> func{ REL::ID(275629) };
 			func(this, a_bodyId, a_motionPropertiesId);
 		}
@@ -446,7 +446,7 @@ namespace RE
 		/// @param a_motionId  New motion index
 		void SetBodyMotion(hknpBodyId a_bodyId, std::uint32_t a_motionId)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, std::uint32_t);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, std::uint32_t);
 			static REL::Relocation<func_t> func{ REL::ID(618186) };
 			func(this, a_bodyId, a_motionId);
 		}
@@ -455,7 +455,7 @@ namespace RE
 		/// Output is 32 bytes: 16 bytes min (hkVector4f), 16 bytes max (hkVector4f).
 		void GetBodyAabb(hknpBodyId a_bodyId, void* a_aabbOut)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, void*);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, void*);
 			static REL::Relocation<func_t> func{ REL::ID(249572) };
 			func(this, a_bodyId, a_aabbOut);
 		}
@@ -469,7 +469,7 @@ namespace RE
 		/// @param a_transformOut [out] Predicted transform (16 floats: 3x4 rotation + translation)
 		void PredictBodyTransform(hknpBodyId a_bodyId, float a_deltaTime, float* a_transformOut)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, float, float*);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, float, float*);
 			static REL::Relocation<func_t> func{ REL::ID(823517) };
 			func(this, a_bodyId, a_deltaTime, a_transformOut);
 		}
@@ -488,7 +488,7 @@ namespace RE
 		/// @param a_velocity  Linear velocity in Havok space (units/second)
 		void SetBodyLinearVelocity(hknpBodyId a_bodyId, hkVector4f& a_velocity)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hkVector4f&);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hkVector4f&);
 			static REL::Relocation<func_t> func{ REL::ID(1082668) };
 			func(this, a_bodyId, a_velocity);
 		}
@@ -498,7 +498,7 @@ namespace RE
 		/// @param a_velocity  Angular velocity in radians/second
 		void SetBodyAngularVelocity(hknpBodyId a_bodyId, hkVector4f& a_velocity)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hkVector4f&);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hkVector4f&);
 			static REL::Relocation<func_t> func{ REL::ID(1068862) };
 			func(this, a_bodyId, a_velocity);
 		}
@@ -507,7 +507,7 @@ namespace RE
 		/// Preferred over calling SetBodyLinearVelocity + SetBodyAngularVelocity separately.
 		void SetBodyVelocity(hknpBodyId a_bodyId, hkVector4f& a_linearVelocity, hkVector4f& a_angularVelocity)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hkVector4f&, hkVector4f&);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hkVector4f&, hkVector4f&);
 			static REL::Relocation<func_t> func{ REL::ID(868461) };
 			func(this, a_bodyId, a_linearVelocity, a_angularVelocity);
 		}
@@ -516,7 +516,7 @@ namespace RE
 		/// @param a_velocityOut  [out] Angular velocity in radians/second
 		void GetBodyAngularVelocity(hknpBodyId a_bodyId, hkVector4f& a_velocityOut)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hkVector4f&);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hkVector4f&);
 			static REL::Relocation<func_t> func{ REL::ID(405369) };
 			func(this, a_bodyId, a_velocityOut);
 		}
@@ -526,7 +526,7 @@ namespace RE
 		/// @param a_impulse  Impulse vector in Havok space
 		void ApplyBodyLinearImpulse(hknpBodyId a_bodyId, hkVector4f& a_impulse)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hkVector4f&);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hkVector4f&);
 			static REL::Relocation<func_t> func{ REL::ID(654985) };
 			func(this, a_bodyId, a_impulse);
 		}
@@ -535,7 +535,7 @@ namespace RE
 		/// @param a_impulse  Angular impulse in Havok space (radians * mass)
 		void ApplyBodyAngularImpulse(hknpBodyId a_bodyId, hkVector4f& a_impulse)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hkVector4f&);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hkVector4f&);
 			static REL::Relocation<func_t> func{ REL::ID(1345477) };
 			func(this, a_bodyId, a_impulse);
 		}
@@ -553,7 +553,7 @@ namespace RE
 		///   world->ApplyBodyImpulseAt(bodyId, throwImpulse, grabPoint);
 		void ApplyBodyImpulseAt(hknpBodyId a_bodyId, hkVector4f& a_impulse, hkVector4f& a_point)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, hkVector4f&, hkVector4f&);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, hkVector4f&, hkVector4f&);
 			static REL::Relocation<func_t> func{ REL::ID(800106) };
 			func(this, a_bodyId, a_impulse, a_point);
 		}
@@ -580,7 +580,7 @@ namespace RE
 		///   world->SetBodyVelocity(handBodyId, lv, av);
 		void ComputeHardKeyFrame(hknpBodyId a_bodyId, float* a_targetPos, float* a_targetRot, float a_deltaTime, float* a_linVelOut, float* a_angVelOut)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, float*, float*, float, float*, float*);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, float*, float*, float, float*, float*);
 			static REL::Relocation<func_t> func{ REL::ID(865502) };
 			func(this, a_bodyId, a_targetPos, a_targetRot, a_deltaTime, a_linVelOut, a_angVelOut);
 		}
@@ -596,7 +596,7 @@ namespace RE
 		/// @param a_deltaTime Frame delta time
 		void ApplyHardKeyFrame(hknpBodyId a_bodyId, float* a_targetPos, float* a_targetRot, float a_deltaTime)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, float*, float*, float);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, float*, float*, float);
 			static REL::Relocation<func_t> func{ REL::Offset(0x153ABD0) };
 			func(this, a_bodyId, a_targetPos, a_targetRot, a_deltaTime);
 		}
@@ -610,7 +610,7 @@ namespace RE
 		/// Call this before applying impulses to a potentially sleeping body.
 		void ActivateBody(hknpBodyId a_bodyId)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId);
+			typedef void                   func_t(hknpWorld*, hknpBodyId);
 			static REL::Relocation<func_t> func{ REL::ID(904571) };
 			func(this, a_bodyId);
 		}
@@ -632,14 +632,14 @@ namespace RE
 		void CreateConstraint(std::uint32_t* a_outId, hknpConstraintCinfo& a_cinfo)
 		{
 			static REL::Relocation<std::uintptr_t> addr{ REL::ID(441087) };
-			auto fn = reinterpret_cast<std::uint32_t*(*)(hknpWorld*, std::uint32_t*, hknpConstraintCinfo*)>(addr.address());
+			auto                                   fn = reinterpret_cast<std::uint32_t* (*)(hknpWorld*, std::uint32_t*, hknpConstraintCinfo*)>(addr.address());
 			fn(this, a_outId, &a_cinfo);
 		}
 
 		/// Destroy one or more constraints, freeing their slots.
 		void DestroyConstraints(std::uint32_t* a_constraintIds, std::int32_t a_count)
 		{
-			typedef void func_t(hknpWorld*, std::uint32_t*, std::int32_t);
+			typedef void                   func_t(hknpWorld*, std::uint32_t*, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(334340) };
 			func(this, a_constraintIds, a_count);
 		}
@@ -647,7 +647,7 @@ namespace RE
 		/// Temporarily disable a constraint (bodies behave as if unconnected).
 		void DisableConstraint(std::uint32_t a_constraintId)
 		{
-			typedef void func_t(hknpWorld*, std::uint32_t);
+			typedef void                   func_t(hknpWorld*, std::uint32_t);
 			static REL::Relocation<func_t> func{ REL::ID(320495) };
 			func(this, a_constraintId);
 		}
@@ -655,7 +655,7 @@ namespace RE
 		/// Re-enable a previously disabled constraint.
 		void EnableConstraint(std::uint32_t a_constraintId, std::int32_t a_activationMode = 0)
 		{
-			typedef void func_t(hknpWorld*, std::uint32_t, std::int32_t);
+			typedef void                   func_t(hknpWorld*, std::uint32_t, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(399921) };
 			func(this, a_constraintId, a_activationMode);
 		}
@@ -677,7 +677,7 @@ namespace RE
 		/// @return Signal pointer to subscribe to (use hkSignal2::subscribe)
 		void* GetEventSignal(hknpEventType::Enum a_eventType)
 		{
-			typedef void* func_t(hknpWorld*, std::int16_t);
+			typedef void*                  func_t(hknpWorld*, std::int16_t);
 			static REL::Relocation<func_t> func{ REL::ID(1029853) };
 			return func(this, static_cast<std::int16_t>(a_eventType));
 		}
@@ -686,7 +686,7 @@ namespace RE
 		/// Only fires for events involving the specified body.
 		void* GetEventSignalForBody(hknpEventType::Enum a_eventType, hknpBodyId a_bodyId)
 		{
-			typedef void* func_t(hknpWorld*, std::int32_t, std::uint32_t);
+			typedef void*                  func_t(hknpWorld*, std::int32_t, std::uint32_t);
 			static REL::Relocation<func_t> func{ REL::ID(497909) };
 			return func(this, static_cast<std::int32_t>(a_eventType), a_bodyId.value);
 		}
@@ -701,7 +701,7 @@ namespace RE
 		/// @param a_solverData [in/out] Solver data from previous step
 		void StepCollide(hknpStepInput& a_input, void* a_taskQueue, void*& a_solverData)
 		{
-			typedef void func_t(hknpWorld*, hknpStepInput&, void*, void*&);
+			typedef void                   func_t(hknpWorld*, hknpStepInput&, void*, void*&);
 			static REL::Relocation<func_t> func{ REL::ID(687604) };
 			func(this, a_input, a_taskQueue, a_solverData);
 		}
@@ -710,7 +710,7 @@ namespace RE
 		/// floating point precision issues far from origin).
 		void ShiftBroadPhase(hkVector4f& a_offset, hkVector4f& a_offset2, void* a_bodyIdArray)
 		{
-			typedef void func_t(hknpWorld*, hkVector4f&, hkVector4f&, void*);
+			typedef void                   func_t(hknpWorld*, hkVector4f&, hkVector4f&, void*);
 			static REL::Relocation<func_t> func{ REL::ID(218299) };
 			func(this, a_offset, a_offset2, a_bodyIdArray);
 		}
@@ -732,7 +732,7 @@ namespace RE
 		/// @param a_rebuildCachesMode 0 = don't rebuild, 1 = rebuild collision caches
 		void EnableBodyFlags(hknpBodyId a_bodyId, std::uint32_t a_flags, std::int32_t a_rebuildCachesMode = 1)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, std::uint32_t, std::int32_t);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, std::uint32_t, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(987833) };
 			func(this, a_bodyId, a_flags, a_rebuildCachesMode);
 		}
@@ -744,7 +744,7 @@ namespace RE
 		/// @param a_rebuildCachesMode 0 = don't rebuild, 1 = rebuild collision caches
 		void DisableBodyFlags(hknpBodyId a_bodyId, std::uint32_t a_flags, std::int32_t a_rebuildCachesMode = 1)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, std::uint32_t, std::int32_t);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, std::uint32_t, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(1506647) };
 			func(this, a_bodyId, a_flags, a_rebuildCachesMode);
 		}
@@ -766,7 +766,7 @@ namespace RE
 		///   // On release: world->SetBodyCollisionFilterInfo(bodyId, origFilter);
 		void SetBodyCollisionFilterInfo(hknpBodyId a_bodyId, std::uint32_t a_filterInfo, std::int32_t a_rebuildCachesMode = 1)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId, std::uint32_t, std::int32_t);
+			typedef void                   func_t(hknpWorld*, hknpBodyId, std::uint32_t, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::Offset(0x153AF00) };
 			func(this, a_bodyId, a_filterInfo, a_rebuildCachesMode);
 		}
@@ -775,7 +775,7 @@ namespace RE
 		/// Call after SetBodyCollisionFilterInfo if rebuildCachesMode was 0.
 		void RebuildBodyCollisionCaches(hknpBodyId a_bodyId)
 		{
-			typedef void func_t(hknpWorld*, hknpBodyId);
+			typedef void                   func_t(hknpWorld*, hknpBodyId);
 			static REL::Relocation<func_t> func{ REL::ID(135033) };
 			func(this, a_bodyId);
 		}
@@ -816,7 +816,8 @@ namespace RE
 		void* GetMaterial(std::uint16_t a_materialId) const
 		{
 			auto* matLib = GetMaterialLibrary();
-			if (!matLib) return nullptr;
+			if (!matLib)
+				return nullptr;
 			auto arrayBase = *reinterpret_cast<std::uintptr_t*>(
 				reinterpret_cast<std::uintptr_t>(matLib) + 0x28);
 			return reinterpret_cast<void*>(arrayBase + a_materialId * 0x50);
@@ -826,7 +827,8 @@ namespace RE
 		std::int32_t GetMaterialCount() const
 		{
 			auto* matLib = GetMaterialLibrary();
-			if (!matLib) return 0;
+			if (!matLib)
+				return 0;
 			return *reinterpret_cast<std::int32_t*>(
 				reinterpret_cast<std::uintptr_t>(matLib) + 0x30);
 		}

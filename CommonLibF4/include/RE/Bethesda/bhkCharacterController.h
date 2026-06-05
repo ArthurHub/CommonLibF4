@@ -31,18 +31,18 @@ namespace RE
 		kStatic = 1,
 		kAnimStatic = 2,
 		kTransparent = 3,
-		kClutter = 4,            ///< Grabbable physics objects
+		kClutter = 4,  ///< Grabbable physics objects
 		kWeapon = 5,
 		kProjectile = 6,
 		kSpell = 7,
-		kBiped = 8,              ///< Ragdoll bones
+		kBiped = 8,  ///< Ragdoll bones
 		kTrees = 9,
 		kProps = 10,
 		kWater = 11,
 		kTrigger = 12,
 		kTerrain = 13,
-		kTrap = 14,              ///< Collides with CharController — do NOT use for arm bones
-		kNonCollidable = 15,     ///< Does not collide with most layers
+		kTrap = 14,           ///< Collides with CharController — do NOT use for arm bones
+		kNonCollidable = 15,  ///< Does not collide with most layers
 		kCloudTrap = 16,
 		kGround = 17,
 		kPortal = 18,
@@ -56,11 +56,11 @@ namespace RE
 		kTransparentSmall = 26,
 		kInvisibleWall = 27,
 		kTransparentSmallAnim = 28,
-		kClutterLarge = 29,      ///< Large grabbable objects
-		kCharController = 30,    ///< Player/NPC character controller capsule
+		kClutterLarge = 29,    ///< Large grabbable objects
+		kCharController = 30,  ///< Player/NPC character controller capsule
 		kStairHelper = 31,
-		kDeadBip = 32,           ///< Dead ragdoll bones
-		kBipedNoCC = 33,         ///< DOES collide with CharController (unlike kBiped which avoids CC). Ghidra-verified 2026-03-22.
+		kDeadBip = 32,    ///< Dead ragdoll bones
+		kBipedNoCC = 33,  ///< DOES collide with CharController (unlike kBiped which avoids CC). Ghidra-verified 2026-03-22.
 		kAvoidBox = 34,
 		kCollisionBox = 35,
 		kCameraSphere = 36,
@@ -85,7 +85,7 @@ namespace RE
 	class bhkNPCollisionObject;
 	class bhkPhysicsSystem;
 	class bhkWorld;
-	class hknpBody;
+	struct hknpBody;
 	class hknpShape;
 
 	struct DamageImpactData;
