@@ -917,11 +917,11 @@ namespace RE
 		// f4sevr SDK GameForms.h:459-463 names these five.
 		enum FormFlags : std::uint32_t
 		{
-			kFormFlag_IsDeleted   = 1u << 5,
+			kFormFlag_IsDeleted = 1u << 5,
 			kFormFlag_PlayerKnows = 1u << 6,
-			kFormFlag_Persistent  = 1u << 10,
-			kFormFlag_IsDisabled  = 1u << 11,
-			kFormFlag_NoHavok     = 1u << 29,
+			kFormFlag_Persistent = 1u << 10,
+			kFormFlag_IsDisabled = 1u << 11,
+			kFormFlag_NoHavok = 1u << 29,
 		};
 	};
 	static_assert(sizeof(TESForm) == 0x20);

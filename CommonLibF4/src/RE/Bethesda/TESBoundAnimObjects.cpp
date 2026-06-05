@@ -20,7 +20,6 @@ namespace RE
 		return true;
 	}
 
-
 	void TESNPC::CopyPerkRankArray(const std::vector<PerkRankData>& a_copiedData)
 	{
 		const auto oldData = perks;

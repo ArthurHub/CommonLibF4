@@ -719,7 +719,7 @@ namespace RE
 		{
 			kWeightLight = 0,
 			kWeightHeavy = 1,
-			kWeightNone  = 2,
+			kWeightNone = 2,
 		};
 
 		// members

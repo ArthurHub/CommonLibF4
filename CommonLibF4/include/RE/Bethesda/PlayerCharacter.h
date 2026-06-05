@@ -392,76 +392,76 @@ namespace RE
 		}
 
 		// members
-		BSSpinLock                                                    actorToDisplayOnHUDLock;              // 628
-		BSSpinLock                                                    questTargetLock;                      // 630
-		BSTHashMap<const TESFaction*, CrimeGoldStruct>                crimeGoldMap;                         // 638
-		BSTHashMap<const TESFaction*, StolenItemValueStruct>          stolenItemValueMap;                   // 668
-		PlayerCoverData                                               coverData;                            // 698
-		ObjectRefHandle                                               commandWaitMarker;                    // 6C4
-		BSTHashMap<const TESFaction*, FriendshipFactionsStruct>       factionOwnerFriendsMap;               // 6C8
-		NiPoint3A                                                     lastKnownGoodPosition;                // 700
-		NiPoint3A                                                     lastKnownGoodNavmeshPosition;         // 710
-		NiPoint3                                                      bulletAutoAim;                        // 720
-		NiPoint3                                                      cachedVelocity;                       // 72C
-		BSTArray<ObjectRefHandle>                                     currentMapMarkers;                    // 738
-		BSTArray<BSTTuple<NiPoint3, AITimeStamp>>                     velocityArray;                        // 750
-		BSTArray<ProjectileHandle>                                    runesCast;                            // 768
-		BSTArray<TESImageSpaceModifier*>                              animationImageSpaceModifiers;         // 78-
-		BSTArray<ImageSpaceModifierInstanceForm*>                     animationImageSpaceInstances;         // 798
-		BSTArray<BSTTuple<NiPointer<NiLight>, bool>>                  playerLights;                         // 7B0
-		BSSimpleList<TESQuestStageItem*>                              questLog;                             // 7C8
-		BSTArray<BGSInstancedQuestObjective>                          objectives;                           // 7D9
-		BSTHashMap<TESQuest*, QuestTargetArray*>                      questTargets;                         // 7F0
-		BSTHashMap<std::uint32_t, SayOnceTimeStampStruct>             currentSayOnceInfosMap;               // 820
-		BSTHashMap<std::uint32_t, SayOnceTimeStampStruct>             currentSpeechRepeatMap;               // 850
-		BSSimpleList<ObjectRefHandle>                                 droppedRefList;                       // 880
-		NiTMap<std::uint32_t, std::uint8_t>                           randomDoorSpaceMap;                   // 890
-		TESWorldSpace*                                                cachedWorldspace;                     // 8B0
-		NiPoint3                                                      exteriorPosition;                     // 8B8
-		BSTSmallArray<SubgraphHandle, 2>                              pipboyAnimSubGraph;                   // 8C8
-		PLAYER_TARGET_LOC                                             queuedTargetLoc;                      // 8E8
-		PLAYER_TARGET_LOC                                             queuedFlightLoc;                      // 948
-		NiPoint3A                                                     flightGridCenter;                     // 9B0
-		BSPathingSolution*                                            flightMountPathingSolution;           // 9C0
-		const TESObjectCELL*                                          flightMountPreloadCell;               // 9C8
-		BSSoundHandle                                                 magicFailureSound;                    // 9D0
-		BSTArray<std::uint32_t>                                       rumorTopicInfoList;                   // 9D8
-		std::uint32_t                                                 testChallangeInfoID;                  // 9F0
-		DialoguePackage*                                              closestConversation;                  // 9F8
-		DialoguePackage*                                              aiConversationRunning;                // A00
-		std::int32_t                                                  numberofStealWarnings;                // A08
-		float                                                         stealWarningTimer;                    // A0C
-		std::int32_t                                                  numberofPickpocketWarnings;           // A10
-		float                                                         pickPocketWarningTimer;               // A14
-		AITimeStamp                                                   warnToLeaveTimeStamp;                 // A18
-		AITimeStamp                                                   usingTeleportDoorTimeStamp;           // A1C
-		NiPointer<ImageSpaceModifierInstanceDOF>                      ironsightsDOFInstance;                // A20
-		TESFaction*                                                   currentPrisonFaction;                 // A28
-		std::uint32_t                                                 jailSentence;                         // A30
-		NiPointer<NiAVObject>                                         autoAimDebugSphere;                   // A38
-		BGSNote*                                                      currHolotape;                         // A40
-		BSSoundHandle                                                 soundHand;                            // A48
-		std::int32_t                                                  vampireFeedDetection;                 // A50
-		std::uint32_t                                                 mapMarkerIterator;                    // A54
-		ObjectRefHandle                                               forceActivateRef;                     // A58
-		ObjectRefHandle                                               loopingActivateRef;                   // A5C
-		std::uint32_t                                                 dialogueCameraLastSceneID;            // A60
-		PlayerActionObject                                            playerActionObjects[15];              // A64
-		REX::EnumSet<PLAYER_ACTION, std::int32_t>                     mostRecentAction;                     // B18
-		ActorHandle                                                   actorDoingPlayerCommand;              // B1C
-		BSTValueEventSource<PlayerCommandTypeEvent>                   playerCurrentCommandType;             // B20
-		BSTArray<hkRefPtr<hknpBSMouseSpringAction>>                   grabSprings;                          // B38
-		NiPoint3                                                      grabUserRotation;                     // B50
-		ObjectRefHandle                                               grabbedObject;                        // B5C
-		float                                                         grabObjectWeight;                     // B60
-		float                                                         grabDistance;                         // B64
-		std::uint32_t                                                 secondsToSleepPerUpdate;              // B68
-		std::uint32_t                                                 sleepSeconds;                         // B6C
+		BSSpinLock                                              actorToDisplayOnHUDLock;       // 628
+		BSSpinLock                                              questTargetLock;               // 630
+		BSTHashMap<const TESFaction*, CrimeGoldStruct>          crimeGoldMap;                  // 638
+		BSTHashMap<const TESFaction*, StolenItemValueStruct>    stolenItemValueMap;            // 668
+		PlayerCoverData                                         coverData;                     // 698
+		ObjectRefHandle                                         commandWaitMarker;             // 6C4
+		BSTHashMap<const TESFaction*, FriendshipFactionsStruct> factionOwnerFriendsMap;        // 6C8
+		NiPoint3A                                               lastKnownGoodPosition;         // 700
+		NiPoint3A                                               lastKnownGoodNavmeshPosition;  // 710
+		NiPoint3                                                bulletAutoAim;                 // 720
+		NiPoint3                                                cachedVelocity;                // 72C
+		BSTArray<ObjectRefHandle>                               currentMapMarkers;             // 738
+		BSTArray<BSTTuple<NiPoint3, AITimeStamp>>               velocityArray;                 // 750
+		BSTArray<ProjectileHandle>                              runesCast;                     // 768
+		BSTArray<TESImageSpaceModifier*>                        animationImageSpaceModifiers;  // 78-
+		BSTArray<ImageSpaceModifierInstanceForm*>               animationImageSpaceInstances;  // 798
+		BSTArray<BSTTuple<NiPointer<NiLight>, bool>>            playerLights;                  // 7B0
+		BSSimpleList<TESQuestStageItem*>                        questLog;                      // 7C8
+		BSTArray<BGSInstancedQuestObjective>                    objectives;                    // 7D9
+		BSTHashMap<TESQuest*, QuestTargetArray*>                questTargets;                  // 7F0
+		BSTHashMap<std::uint32_t, SayOnceTimeStampStruct>       currentSayOnceInfosMap;        // 820
+		BSTHashMap<std::uint32_t, SayOnceTimeStampStruct>       currentSpeechRepeatMap;        // 850
+		BSSimpleList<ObjectRefHandle>                           droppedRefList;                // 880
+		NiTMap<std::uint32_t, std::uint8_t>                     randomDoorSpaceMap;            // 890
+		TESWorldSpace*                                          cachedWorldspace;              // 8B0
+		NiPoint3                                                exteriorPosition;              // 8B8
+		BSTSmallArray<SubgraphHandle, 2>                        pipboyAnimSubGraph;            // 8C8
+		PLAYER_TARGET_LOC                                       queuedTargetLoc;               // 8E8
+		PLAYER_TARGET_LOC                                       queuedFlightLoc;               // 948
+		NiPoint3A                                               flightGridCenter;              // 9B0
+		BSPathingSolution*                                      flightMountPathingSolution;    // 9C0
+		const TESObjectCELL*                                    flightMountPreloadCell;        // 9C8
+		BSSoundHandle                                           magicFailureSound;             // 9D0
+		BSTArray<std::uint32_t>                                 rumorTopicInfoList;            // 9D8
+		std::uint32_t                                           testChallangeInfoID;           // 9F0
+		DialoguePackage*                                        closestConversation;           // 9F8
+		DialoguePackage*                                        aiConversationRunning;         // A00
+		std::int32_t                                            numberofStealWarnings;         // A08
+		float                                                   stealWarningTimer;             // A0C
+		std::int32_t                                            numberofPickpocketWarnings;    // A10
+		float                                                   pickPocketWarningTimer;        // A14
+		AITimeStamp                                             warnToLeaveTimeStamp;          // A18
+		AITimeStamp                                             usingTeleportDoorTimeStamp;    // A1C
+		NiPointer<ImageSpaceModifierInstanceDOF>                ironsightsDOFInstance;         // A20
+		TESFaction*                                             currentPrisonFaction;          // A28
+		std::uint32_t                                           jailSentence;                  // A30
+		NiPointer<NiAVObject>                                   autoAimDebugSphere;            // A38
+		BGSNote*                                                currHolotape;                  // A40
+		BSSoundHandle                                           soundHand;                     // A48
+		std::int32_t                                            vampireFeedDetection;          // A50
+		std::uint32_t                                           mapMarkerIterator;             // A54
+		ObjectRefHandle                                         forceActivateRef;              // A58
+		ObjectRefHandle                                         loopingActivateRef;            // A5C
+		std::uint32_t                                           dialogueCameraLastSceneID;     // A60
+		PlayerActionObject                                      playerActionObjects[15];       // A64
+		REX::EnumSet<PLAYER_ACTION, std::int32_t>               mostRecentAction;              // B18
+		ActorHandle                                             actorDoingPlayerCommand;       // B1C
+		BSTValueEventSource<PlayerCommandTypeEvent>             playerCurrentCommandType;      // B20
+		BSTArray<hkRefPtr<hknpBSMouseSpringAction>>             grabSprings;                   // B38
+		NiPoint3                                                grabUserRotation;              // B50
+		ObjectRefHandle                                         grabbedObject;                 // B5C
+		float                                                   grabObjectWeight;              // B60
+		float                                                   grabDistance;                  // B64
+		std::uint32_t                                           secondsToSleepPerUpdate;       // B68
+		std::uint32_t                                           sleepSeconds;                  // B6C
 #ifdef ENABLE_FALLOUT_VR
 		// f4sevr-port: VR inserts 0x470 bytes of player-specific state here (HMD tracking,
 		// controller-hand bone refs, IK rig data, etc.). All fields below are shifted by +0x470.
 		// f4sevr Forms.h asserts in VR: firstPersonBipedAnim @ 0xFE0, tintingData @ 0x1170.
-		std::byte                                                     vrPlayerStatePadding[0x470];          // B70 (VR only)
+		std::byte vrPlayerStatePadding[0x470];  // B70 (VR only)
 #endif
 		BSTSmartPointer<BipedAnim>                                    firstPersonBipedAnim;                 // flat: B70  vr: FE0
 		NiPointer<NiNode>                                             firstPerson3D;                        // B78
