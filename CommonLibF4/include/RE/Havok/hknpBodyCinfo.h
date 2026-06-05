@@ -88,7 +88,7 @@ namespace RE
 		/// motionPropertiesId=DYNAMIC, identity orientation, zero position.
 		hknpBodyCinfo()
 		{
-			typedef hknpBodyCinfo* func_t(hknpBodyCinfo*);
+			typedef hknpBodyCinfo*         func_t(hknpBodyCinfo*);
 			static REL::Relocation<func_t> func{ REL::ID(718403) };
 			func(this);
 		}
@@ -97,21 +97,21 @@ namespace RE
 		// and initFromCinfo (VR 0x1415616f0) which reads shape from offset 0x00.
 
 		// members
-		const hknpShape*           shape;                  // 00 — collision shape (raw pointer, NOT ref-counted here)
-		hknpBodyId                 bodyId;                 // 08 — 0x7FFFFFFF = auto-assign (default)
-		hknpMotionId               motionId;               // 0C — motion slot index (MUST set for non-static bodies)
-		hknpMotionPropertiesId_Handle motionPropertiesId;  // 10 — {0}=STATIC, {1}=DYNAMIC, {2}=KEYFRAMED, 0xFF=default→DYNAMIC
-		hknpMaterialId             materialId;             // 12 — physics material (friction/restitution)
-		std::uint32_t              collisionFilterInfo;    // 14 — collision layer bits
-		std::uint32_t              pad18;                  // 18
-		std::uint32_t              collisionLookAheadDistance; // 1C — CCD look-ahead distance
-		const char*                name;                   // 20 — debug name string (can be nullptr)
-		std::uintptr_t             userData;               // 28 — user data (SET TO 0 for custom bodies!)
-		hkVector4f                 position;               // 30 — world-space position (Havok coordinates)
-		hkVector4f                 orientation;             // 40 — quaternion {x,y,z,w}, identity = {0,0,0,1}
-		std::uint8_t               qualityId;              // 50 — solver quality preset
-		std::uint8_t               pad51[7];               // 51
-		std::uint64_t              reserved58;             // 58 — ref-counted by ctor/dtor, don't touch
+		const hknpShape*              shape;                       // 00 — collision shape (raw pointer, NOT ref-counted here)
+		hknpBodyId                    bodyId;                      // 08 — 0x7FFFFFFF = auto-assign (default)
+		hknpMotionId                  motionId;                    // 0C — motion slot index (MUST set for non-static bodies)
+		hknpMotionPropertiesId_Handle motionPropertiesId;          // 10 — {0}=STATIC, {1}=DYNAMIC, {2}=KEYFRAMED, 0xFF=default→DYNAMIC
+		hknpMaterialId                materialId;                  // 12 — physics material (friction/restitution)
+		std::uint32_t                 collisionFilterInfo;         // 14 — collision layer bits
+		std::uint32_t                 pad18;                       // 18
+		std::uint32_t                 collisionLookAheadDistance;  // 1C — CCD look-ahead distance
+		const char*                   name;                        // 20 — debug name string (can be nullptr)
+		std::uintptr_t                userData;                    // 28 — user data (SET TO 0 for custom bodies!)
+		hkVector4f                    position;                    // 30 — world-space position (Havok coordinates)
+		hkVector4f                    orientation;                 // 40 — quaternion {x,y,z,w}, identity = {0,0,0,1}
+		std::uint8_t                  qualityId;                   // 50 — solver quality preset
+		std::uint8_t                  pad51[7];                    // 51
+		std::uint64_t                 reserved58;                  // 58 — ref-counted by ctor/dtor, don't touch
 	};
 	static_assert(sizeof(hknpBodyCinfo) == 0x60);
 }

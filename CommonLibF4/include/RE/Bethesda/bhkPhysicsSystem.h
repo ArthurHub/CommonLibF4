@@ -59,25 +59,25 @@ namespace RE
 	struct hknpPhysicsSystemInstance
 	{
 	public:
-		void*          vtable;       // 00 — vtable pointer
-		std::uint32_t  refCountAndFlags;  // 08 — ref count in lower 16 bits
-		std::uint16_t  pad0C;        // 0C
-		std::uint16_t  pad0E;        // 0E
-		std::uint64_t  pad10;        // 10
+		void*         vtable;            // 00 — vtable pointer
+		std::uint32_t refCountAndFlags;  // 08 — ref count in lower 16 bits
+		std::uint16_t pad0C;             // 0C
+		std::uint16_t pad0E;             // 0E
+		std::uint64_t pad10;             // 10
 
 		/// Pointer to the hknpWorld this instance is active in.
 		/// Compared with bhkWorld+0x60 to check if instance is in a specific world.
-		hknpWorld*     world;        // 18
+		hknpWorld* world;  // 18
 
 		/// Array of body IDs in this system (uint32_t each).
 		/// Indexed by body index within the system (0-based).
 		/// 0x7FFFFFFF entries mean "invalid/not created".
-		std::uint32_t* bodyIds;      // 20
+		std::uint32_t* bodyIds;  // 20
 
 		/// Number of bodies in this system.
-		std::int32_t   bodyCount;    // 28
+		std::int32_t bodyCount;  // 28
 
-		std::uint32_t  pad2C;        // 2C
+		std::uint32_t pad2C;  // 2C
 	};
 	static_assert(sizeof(hknpPhysicsSystemInstance) == 0x30);
 
@@ -86,11 +86,11 @@ namespace RE
 	struct hknpPhysicsSystemConstraintDesc
 	{
 	public:
-		void*          constraintData;  // 00 — hkpConstraintData* (polymorphic, ref-counted)
-		std::int32_t   bodyIndexA;      // 08 — index into body array (NOT body ID)
-		std::int32_t   bodyIndexB;      // 0C — index into body array
-		std::uint8_t   flags;           // 10 — constraint flags (bit 0: activation mode)
-		std::uint8_t   pad11[7];        // 11
+		void*        constraintData;  // 00 — hkpConstraintData* (polymorphic, ref-counted)
+		std::int32_t bodyIndexA;      // 08 — index into body array (NOT body ID)
+		std::int32_t bodyIndexB;      // 0C — index into body array
+		std::uint8_t flags;           // 10 — constraint flags (bit 0: activation mode)
+		std::uint8_t pad11[7];        // 11
 	};
 	static_assert(sizeof(hknpPhysicsSystemConstraintDesc) == 0x18);
 
@@ -102,23 +102,23 @@ namespace RE
 	struct hknpPhysicsSystemData
 	{
 	public:
-		void*          vtable;         // 00
-		std::uint64_t  pad08;          // 08
+		void*         vtable;  // 00
+		std::uint64_t pad08;   // 08
 
 		/// Material creation info array (stride 0x50 per material).
 		/// Used by GetMaterialCinfo to look up physics materials by index.
-		void*          materialCinfos; // 10
+		void* materialCinfos;  // 10
 
-		std::uint8_t   pad18[0x38];    // 18
+		std::uint8_t pad18[0x38];  // 18
 
 		/// Constraint descriptor array (stride 0x18).
 		/// Each entry has a constraintData pointer and two body indices.
 		hknpPhysicsSystemConstraintDesc* constraintDescs;  // 50
 
 		/// Number of constraint descriptors.
-		std::int32_t   constraintCount;  // 58
+		std::int32_t constraintCount;  // 58
 
-		std::uint32_t  pad5C;          // 5C
+		std::uint32_t pad5C;  // 5C
 	};
 	// Note: full size not confirmed — don't add static_assert
 
@@ -138,8 +138,8 @@ namespace RE
 		void* vtable;  // 00
 
 		std::uint32_t refCountAndFlags;  // 08 — ref count in lower 16 bits
-		std::uint16_t pad0C;  // 0C
-		std::uint16_t pad0E;  // 0E
+		std::uint16_t pad0C;             // 0C
+		std::uint16_t pad0E;             // 0E
 
 		/// Serialized physics system data (shapes, materials, constraint descriptors).
 		/// Loaded from the .nif file. Persists across cell transitions.
@@ -171,7 +171,7 @@ namespace RE
 		/// If instance already exists in a different world, calls ChangeWorld internally.
 		bool CreateInstance(bhkWorld& a_world, hkTransformf& a_transform)
 		{
-			using func_t = bool(*)(bhkPhysicsSystem*, bhkWorld&, hkTransformf&);
+			using func_t = bool (*)(bhkPhysicsSystem*, bhkWorld&, hkTransformf&);
 			static REL::Relocation<func_t> func{ REL::ID(1245299) };
 			return func(this, a_world, a_transform);
 		}
@@ -184,7 +184,7 @@ namespace RE
 		/// Internally compares instance->world with bhkWorld+0x60 (the hknpWorld pointer).
 		bool HasInstanceInWorld(bhkWorld& a_world)
 		{
-			using func_t = bool(*)(bhkPhysicsSystem*, bhkWorld&);
+			using func_t = bool (*)(bhkPhysicsSystem*, bhkWorld&);
 			static REL::Relocation<func_t> func{ REL::ID(792872) };
 			return func(this, a_world);
 		}
@@ -198,7 +198,7 @@ namespace RE
 		/// For example, a door might have index 0 = door panel, index 1 = frame.
 		void GetBodyId(hknpBodyId* a_outBodyId, std::int32_t a_index)
 		{
-			using func_t = void(*)(bhkPhysicsSystem*, hknpBodyId*, std::int32_t);
+			using func_t = void (*)(bhkPhysicsSystem*, hknpBodyId*, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(526734) };
 			func(this, a_outBodyId, a_index);
 		}
@@ -212,7 +212,7 @@ namespace RE
 		/// Returns false if no instance exists.
 		bool ContainsBodyId(hknpBodyId a_bodyId)
 		{
-			using func_t = bool(*)(bhkPhysicsSystem*, hknpBodyId);
+			using func_t = bool (*)(bhkPhysicsSystem*, hknpBodyId);
 			static REL::Relocation<func_t> func{ REL::ID(260599) };
 			return func(this, a_bodyId);
 		}
@@ -226,7 +226,7 @@ namespace RE
 		/// @return True if bodies were added
 		bool AddToWorld()
 		{
-			using func_t = bool(*)(bhkPhysicsSystem*);
+			using func_t = bool (*)(bhkPhysicsSystem*);
 			static REL::Relocation<func_t> func{ REL::ID(512878) };
 			return func(this);
 		}
@@ -240,7 +240,7 @@ namespace RE
 		/// @return True if world change succeeded
 		bool ChangeWorld(bhkWorld& a_newWorld, hkTransformf& a_transform)
 		{
-			using func_t = bool(*)(bhkPhysicsSystem*, bhkWorld&, hkTransformf&);
+			using func_t = bool (*)(bhkPhysicsSystem*, bhkWorld&, hkTransformf&);
 			static REL::Relocation<func_t> func{ REL::ID(153808) };
 			return func(this, a_newWorld, a_transform);
 		}
@@ -252,7 +252,7 @@ namespace RE
 		/// @return Pointer to material cinfo data
 		void* GetMaterialCinfo(std::int32_t a_index)
 		{
-			using func_t = void*(*)(bhkPhysicsSystem*, std::int32_t);
+			using func_t = void* (*)(bhkPhysicsSystem*, std::int32_t);
 			static REL::Relocation<func_t> func{ REL::ID(139822) };
 			return func(this, a_index);
 		}

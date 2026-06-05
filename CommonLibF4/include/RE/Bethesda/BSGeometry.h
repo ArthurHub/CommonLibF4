@@ -44,15 +44,15 @@ namespace RE
 
 		struct RUNTIME_DATA
 		{
-#define BSGEOMETRY_RUNTIME_DATA_CONTENT                                                  \
-	NiBound                     modelBound;     /* 120 (flat) / 160 (VR) */              \
-	NiPointer<NiProperty>       properties[2];  /* 130 (flat) / 170 (VR) */              \
-	NiPointer<BSSkin::Instance> skinInstance;   /* 140 (flat) / 180 (VR) */              \
-	void*                       rendererData;   /* 148 (flat) / 188 (VR) */              \
-	BSGraphics::VertexDesc      vertexDesc;     /* 150 (flat) / 190 (VR) */              \
-	std::uint8_t                type;           /* 158 (flat) / 198 (VR) */              \
-	bool                        registered;     /* 159 (flat) / 199 (VR) */
-			BSGEOMETRY_RUNTIME_DATA_CONTENT
+#define BSGEOMETRY_RUNTIME_DATA_CONTENT                                    \
+	NiBound                     modelBound;    /* 120 (flat) / 160 (VR) */ \
+	NiPointer<NiProperty>       properties[2]; /* 130 (flat) / 170 (VR) */ \
+	NiPointer<BSSkin::Instance> skinInstance;  /* 140 (flat) / 180 (VR) */ \
+	void*                       rendererData;  /* 148 (flat) / 188 (VR) */ \
+	BSGraphics::VertexDesc      vertexDesc;    /* 150 (flat) / 190 (VR) */ \
+	std::uint8_t                type;          /* 158 (flat) / 198 (VR) */ \
+	bool                        registered;    /* 159 (flat) / 199 (VR) */
+            BSGEOMETRY_RUNTIME_DATA_CONTENT
 		};
 		static_assert(sizeof(RUNTIME_DATA) == 0x40);
 
@@ -108,9 +108,9 @@ namespace RE
 
 		struct TRISHAPE_RUNTIME_DATA
 		{
-#define BSTRISHAPE_RUNTIME_DATA_CONTENT                               \
-	std::uint32_t numTriangles;  /* 160 (flat) / 1A0 (VR) */          \
-	std::uint16_t numVertices;   /* 164 (flat) / 1A4 (VR) */
+#define BSTRISHAPE_RUNTIME_DATA_CONTENT                     \
+	std::uint32_t numTriangles; /* 160 (flat) / 1A0 (VR) */ \
+	std::uint16_t numVertices;  /* 164 (flat) / 1A4 (VR) */
 			BSTRISHAPE_RUNTIME_DATA_CONTENT
 		};
 		static_assert(sizeof(TRISHAPE_RUNTIME_DATA) == 0x8);

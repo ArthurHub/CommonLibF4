@@ -50,15 +50,15 @@ namespace RE
 	{
 	public:
 		// members
-		void*          filterRef;            // 00 — collision filter config (from broadphase dispatcher, REQUIRED)
-		std::uint16_t  materialId;           // 08 — material filter (0xFFFF = accept any material)
-		std::uint16_t  pad0A;                // 0A
-		std::uint32_t  collisionFilterInfo;  // 0C — layer/group filter (bits 0-6 = layer, bits 16-31 = group)
-		std::uint64_t  reserved10;           // 10 — reserved (set to 0)
-		std::uint8_t   reserved18;           // 18 — reserved (set to 0)
-		std::uint8_t   pad19[7];             // 19 — padding to 0x20 alignment
-		float          aabbMin[4];           // 20 — AABB minimum bounds (Havok space, W=0)
-		float          aabbMax[4];           // 30 — AABB maximum bounds (Havok space, W=0)
+		void*         filterRef;            // 00 — collision filter config (from broadphase dispatcher, REQUIRED)
+		std::uint16_t materialId;           // 08 — material filter (0xFFFF = accept any material)
+		std::uint16_t pad0A;                // 0A
+		std::uint32_t collisionFilterInfo;  // 0C — layer/group filter (bits 0-6 = layer, bits 16-31 = group)
+		std::uint64_t reserved10;           // 10 — reserved (set to 0)
+		std::uint8_t  reserved18;           // 18 — reserved (set to 0)
+		std::uint8_t  pad19[7];             // 19 — padding to 0x20 alignment
+		float         aabbMin[4];           // 20 — AABB minimum bounds (Havok space, W=0)
+		float         aabbMax[4];           // 30 — AABB maximum bounds (Havok space, W=0)
 	};
 	static_assert(sizeof(hknpAabbQuery) == 0x40);
 }

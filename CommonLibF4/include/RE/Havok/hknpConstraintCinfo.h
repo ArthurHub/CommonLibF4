@@ -84,21 +84,21 @@ namespace RE
 	struct hknpConstraint
 	{
 	public:
-		std::uint32_t      bodyIdA;          // 00 — first body
-		std::uint32_t      bodyIdB;          // 04 — second body
-		hkpConstraintData* constraintData;   // 08 — ref-counted constraint data
-		std::uint32_t      constraintId;     // 10 — ID returned by CreateConstraint
-		std::uint16_t      nextFreeLink;     // 14 — free list link (0xFFFF = active/in-use)
-		std::uint8_t       flags;            // 16 — bit 0x04 = disabled
-		std::uint8_t       constraintType;   // 17 — type from constraintData vtable
-		void*              atomChainPtr;     // 18 — pointer to constraint atom chain
-		std::uint16_t      schemaSize;       // 20 — Jacobian schema workspace size
-		std::int16_t       sizeOfSchemas;    // 22 — from hkpConstraintInfo.m_sizeOfSchemas (Ghidra-verified)
-		std::uint8_t       pad24;            // 24
-		std::uint8_t       pad25;            // 25
-		std::int16_t       runtimeSize;      // 26 — solver runtime data size
-		void*              runtimeData;      // 28 — allocated solver runtime buffer
-		std::uint64_t      pad30;            // 30
+		std::uint32_t      bodyIdA;         // 00 — first body
+		std::uint32_t      bodyIdB;         // 04 — second body
+		hkpConstraintData* constraintData;  // 08 — ref-counted constraint data
+		std::uint32_t      constraintId;    // 10 — ID returned by CreateConstraint
+		std::uint16_t      nextFreeLink;    // 14 — free list link (0xFFFF = active/in-use)
+		std::uint8_t       flags;           // 16 — bit 0x04 = disabled
+		std::uint8_t       constraintType;  // 17 — type from constraintData vtable
+		void*              atomChainPtr;    // 18 — pointer to constraint atom chain
+		std::uint16_t      schemaSize;      // 20 — Jacobian schema workspace size
+		std::int16_t       sizeOfSchemas;   // 22 — from hkpConstraintInfo.m_sizeOfSchemas (Ghidra-verified)
+		std::uint8_t       pad24;           // 24
+		std::uint8_t       pad25;           // 25
+		std::int16_t       runtimeSize;     // 26 — solver runtime data size
+		void*              runtimeData;     // 28 — allocated solver runtime buffer
+		std::uint64_t      pad30;           // 30
 	};
 	static_assert(sizeof(hknpConstraint) == 0x38);
 
@@ -131,23 +131,23 @@ namespace RE
 		/// These identify which solver algorithm to use.
 		enum class ConstraintType : std::uint8_t
 		{
-			kBallAndSocket = 0,       ///< Ball-and-socket (3 DOF rotation free)
-			kHinge = 1,               ///< Single-axis hinge
-			kLimitedHinge = 2,        ///< Hinge with angle limits
-			kPrismatic = 6,           ///< Sliding joint
-			kRagdoll = 7,             ///< Ragdoll (cone + twist + plane limits)
-			kStiffSpring = 8,         ///< Fixed-distance spring
-			kFixed = 0x17,            ///< Rigid weld (no relative motion)
-			kBreakable = 0xC,         ///< Breakable wrapper (compound type)
-			kMalleable = 0xD,         ///< Soft/malleable wrapper (compound type)
+			kBallAndSocket = 0,  ///< Ball-and-socket (3 DOF rotation free)
+			kHinge = 1,          ///< Single-axis hinge
+			kLimitedHinge = 2,   ///< Hinge with angle limits
+			kPrismatic = 6,      ///< Sliding joint
+			kRagdoll = 7,        ///< Ragdoll (cone + twist + plane limits)
+			kStiffSpring = 8,    ///< Fixed-distance spring
+			kFixed = 0x17,       ///< Rigid weld (no relative motion)
+			kBreakable = 0xC,    ///< Breakable wrapper (compound type)
+			kMalleable = 0xD,    ///< Soft/malleable wrapper (compound type)
 		};
 
 		// members (hkReferencedObject base)
-		void*         vtable;        // 00
+		void*         vtable;            // 00
 		std::uint32_t refCountAndFlags;  // 08 — lower 16 bits = ref count
-		std::uint16_t pad0C;         // 0C
-		std::uint16_t pad0E;         // 0E
-		std::uint64_t userData;      // 10 — constraint user data (often 0)
+		std::uint16_t pad0C;             // 0C
+		std::uint16_t pad0E;             // 0E
+		std::uint64_t userData;          // 10 — constraint user data (often 0)
 	};
 	static_assert(sizeof(hkpConstraintData) == 0x18);
 

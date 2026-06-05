@@ -89,7 +89,7 @@ namespace RE
 		std::uint64_t pad48;  // 48 — internal convex hull data
 		hkVector4f    a;      // 50 — start endpoint of the capsule axis (Havok space)
 		hkVector4f    b;      // 60 — end endpoint of the capsule axis (Havok space)
-		// Note: radius is at this->convexRadius (offset +0x14, inherited from hknpShape)
+							  // Note: radius is at this->convexRadius (offset +0x14, inherited from hknpShape)
 	};
 	static_assert(sizeof(hknpCapsuleShape) == 0x70);
 }

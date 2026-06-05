@@ -66,10 +66,10 @@ namespace RE
 		//   Translation (+0x30): world position in Havok space (xyz, w)
 		// To convert world→local: localPos = dot(col_i, worldDelta) for each axis i.
 		// The W components of columns 0-2 are preserved from initialization (AABB/COM).
-		float transformCol0[4];       // 00 — rotation column 0 (local X-axis in world) + W
-		float transformCol1[4];       // 10 — rotation column 1 (local Y-axis in world) + W
-		float transformCol2[4];       // 20 — rotation column 2 (local Z-axis in world) + W
-		float translation[4];         // 30 — world translation (Havok space)
+		float transformCol0[4];  // 00 — rotation column 0 (local X-axis in world) + W
+		float transformCol1[4];  // 10 — rotation column 1 (local Y-axis in world) + W
+		float transformCol2[4];  // 20 — rotation column 2 (local Z-axis in world) + W
+		float translation[4];    // 30 — world translation (Havok space)
 
 		// +0x40: Body flags (uint32)
 		// Written by enableBodyFlags/disableBodyFlags.
@@ -85,7 +85,7 @@ namespace RE
 		//   0x08000000 = Bethesda CC grabbed-body bookkeeping flag (does NOT prevent Havok
 		//                 deactivation — activateBody checks bit 3 not bit 27). Use explicit
 		//                 hknpWorld::activateBody per-frame to keep bodies awake.
-		std::uint32_t flags;          // 40
+		std::uint32_t flags;  // 40
 
 		// +0x44: Collision filter info (uint32)
 		// Written by setBodyCollisionFilterInfo, copied from cinfo+0x14.
@@ -97,13 +97,13 @@ namespace RE
 		// +0x48: Shape pointer
 		// The collision shape (hknpCapsuleShape, hknpConvexShape, etc.)
 		// Copied from cinfo.shape. Raw pointer — NOT ref-counted in the body.
-		const hknpShape* shape;       // 48
+		const hknpShape* shape;  // 48
 
 		// +0x50..+0x5F: Internal data (broadphase AABB quantized, set during commit)
-		std::uint8_t pad50[0x10];     // 50
+		std::uint8_t pad50[0x10];  // 50
 
 		// +0x60: Body ID (matches the array index, set by initFromCinfo)
-		hknpBodyId bodyId;            // 60
+		hknpBodyId bodyId;  // 60
 		// +0x64: Next attached body ID (compound body linked list, 0xFFFFFFFF = none).
 		std::uint32_t nextAttachedBodyId;  // 64
 
@@ -111,13 +111,13 @@ namespace RE
 		// motionIndex == 0 means "shared static motion" (body is static).
 		// IMPORTANT: Must bounds-check (> 4096 likely invalid / garbage).
 		// Compound objects share the same motionId (e.g., bodies 1593-1597 all use motionId=165).
-		std::uint32_t motionIndex;    // 68
+		std::uint32_t motionIndex;  // 68
 
 		// +0x6C: Deactivation island ID (-1 = none / not in any island).
 		std::int32_t deactivationIslandId;  // 6C
 
 		// +0x70: Material ID (uint16) — from cinfo.materialId
-		hknpMaterialId materialId;    // 70
+		hknpMaterialId materialId;  // 70
 
 		// +0x72: Motion properties ID — determines physics behavior.
 		// Lower byte is the preset: 0=STATIC, 1=DYNAMIC, 2=KEYFRAMED, 3=FROZEN
@@ -125,23 +125,23 @@ namespace RE
 		// Use (motionPropertiesId & 0xFF) to get the base preset.
 		std::uint8_t motionPropertiesId;  // 72
 
-		std::uint8_t pad73[0x0B];     // 73
+		std::uint8_t pad73[0x0B];  // 73
 
 		// +0x7E: Quality ID — affects solver iteration count.
 		// Set from cinfo.qualityId. 0xFF = default.
 		// KEYFRAMED bodies should use quality 2.
-		std::uint8_t qualityId;       // 7E
+		std::uint8_t qualityId;  // 7E
 
 		// +0x7F: Shape complexity flag (derived from shape during initFromCinfo)
-		std::uint8_t shapeComplexity; // 7F
+		std::uint8_t shapeComplexity;  // 7F
 
 		// +0x80..+0x87: Internal data
-		std::uint8_t pad80[0x08];     // 80
+		std::uint8_t pad80[0x08];  // 80
 
 		// +0x88: User data — often a TESObjectREFR* but MUST be validated before use.
 		// Set from cinfo.userData. Set to 0 for custom bodies (hand colliders, etc.)
 		// to avoid crashes in FOIslandActivationListener.
-		std::uintptr_t userData;      // 88
+		std::uintptr_t userData;  // 88
 	};
 	static_assert(sizeof(hknpBody) == 0x90);
 

@@ -36,7 +36,7 @@ namespace RE
 		/// @param a_action  The action to register (e.g., hknpBSMouseSpringAction*)
 		void AddAction(void* a_action)
 		{
-			using func_t = void(*)(hknpActionManager*, void*);
+			using func_t = void (*)(hknpActionManager*, void*);
 			static REL::Relocation<func_t> func{ REL::ID(411727) };
 			func(this, a_action);
 		}
@@ -47,7 +47,7 @@ namespace RE
 		/// @param a_action  The action to remove
 		void RemoveAction(void* a_action)
 		{
-			using func_t = void(*)(hknpActionManager*, void*);
+			using func_t = void (*)(hknpActionManager*, void*);
 			static REL::Relocation<func_t> func{ REL::ID(104709) };
 			func(this, a_action);
 		}

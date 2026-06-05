@@ -78,11 +78,11 @@ namespace RE
 	public:
 		enum Enum
 		{
-			kNone,       ///< No collision
-			kConvex,     ///< Convex-convex (GJK/EPA)
-			kComposite,  ///< Composite shape (iterate children)
+			kNone,           ///< No collision
+			kConvex,         ///< Convex-convex (GJK/EPA)
+			kComposite,      ///< Composite shape (iterate children)
 			kDistanceField,  ///< SDF-based collision
-			kUser        ///< Custom collision algorithm
+			kUser            ///< Custom collision algorithm
 		};
 	};
 	static_assert(std::is_empty_v<hknpCollisionDispatchType>);
@@ -94,26 +94,26 @@ namespace RE
 	public:
 		enum class Enum
 		{
-			kConvex,                ///< Generic convex shape
-			kConvexPolytope,        ///< Convex hull with explicit vertices/faces
-			kSphere,                ///< Sphere (radius only)
-			kCapsule,               ///< Capsule / pill shape (line segment + radius)
-			kTriangle,              ///< Single triangle
-			kCompressedMesh,        ///< Compressed triangle mesh (most world geometry)
-			kExternMesh,            ///< External mesh reference
-			kStaticCompound,        ///< Static compound of child shapes
-			kDynamicCompound,       ///< Dynamic compound (children can move)
-			kHeightField,           ///< Terrain height field
-			kCompressedHeightField, ///< Compressed terrain
-			kScaledConvex,          ///< Uniformly scaled convex shape
-			kMasked,                ///< Shape with disabled regions
-			kMaskedCompound,        ///< Compound with masked children
-			kLOD,                   ///< Level-of-detail shape
-			kDummy,                 ///< Placeholder shape
-			kUser0,                 ///< User-defined type 0
-			kUser1,                 ///< User-defined type 1
-			kUser2,                 ///< User-defined type 2
-			kUser3,                 ///< User-defined type 3
+			kConvex,                 ///< Generic convex shape
+			kConvexPolytope,         ///< Convex hull with explicit vertices/faces
+			kSphere,                 ///< Sphere (radius only)
+			kCapsule,                ///< Capsule / pill shape (line segment + radius)
+			kTriangle,               ///< Single triangle
+			kCompressedMesh,         ///< Compressed triangle mesh (most world geometry)
+			kExternMesh,             ///< External mesh reference
+			kStaticCompound,         ///< Static compound of child shapes
+			kDynamicCompound,        ///< Dynamic compound (children can move)
+			kHeightField,            ///< Terrain height field
+			kCompressedHeightField,  ///< Compressed terrain
+			kScaledConvex,           ///< Uniformly scaled convex shape
+			kMasked,                 ///< Shape with disabled regions
+			kMaskedCompound,         ///< Compound with masked children
+			kLOD,                    ///< Level-of-detail shape
+			kDummy,                  ///< Placeholder shape
+			kUser0,                  ///< User-defined type 0
+			kUser1,                  ///< User-defined type 1
+			kUser2,                  ///< User-defined type 2
+			kUser3,                  ///< User-defined type 3
 
 			kTotal,
 
@@ -136,11 +136,11 @@ namespace RE
 		/// Shape capability flags — indicate what operations a shape supports.
 		enum class FlagsEnum
 		{
-			kIsConvexShape = 1u << 0,        ///< Shape is a convex primitive
-			kIsConvexPolytopeShape = 1u << 1, ///< Shape has explicit vertex/face data
-			kIsCompositeShape = 1u << 2,      ///< Shape contains child shapes
-			kIsHeightFieldShape = 1u << 3,    ///< Shape is a height field
-			kUseSinglePointManifold = 1u << 4, ///< Use single-point contact manifold
+			kIsConvexShape = 1u << 0,           ///< Shape is a convex primitive
+			kIsConvexPolytopeShape = 1u << 1,   ///< Shape has explicit vertex/face data
+			kIsCompositeShape = 1u << 2,        ///< Shape contains child shapes
+			kIsHeightFieldShape = 1u << 3,      ///< Shape is a height field
+			kUseSinglePointManifold = 1u << 4,  ///< Use single-point contact manifold
 			kIsInteriorTriangle = 1u << 5,
 			kSupportsCollisionsWithInteriorTriangles = 1u << 6,
 			kUseNormalToFindSupportPlane = 1u << 7,

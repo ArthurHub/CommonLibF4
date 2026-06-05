@@ -73,11 +73,11 @@ namespace RE
 		// +0x00: World-space position (Havok coordinates, divide by kHavokScale for game units).
 		// This is the CENTER OF MASS position, not necessarily the visual origin.
 		// w component may contain encoded data — treat as padding.
-		hkVector4f position;          // 00
+		hkVector4f position;  // 00
 
 		// +0x10: Orientation quaternion (x, y, z, w).
 		// Normalized quaternion representing the body's current rotation.
-		hkVector4f orientation;       // 10
+		hkVector4f orientation;  // 10
 
 		// +0x20: Packed inverse inertia (NOT velocity — velocity is at +0x40!).
 		// int16[4]: invInertiaX, invInertiaY, invInertiaZ, invMass.
@@ -85,7 +85,7 @@ namespace RE
 		std::int16_t packedInverseInertia[4];  // 20
 
 		// +0x28: First body ID that references this motion.
-		std::uint32_t firstBodyId;    // 28
+		std::uint32_t firstBodyId;  // 28
 
 		// +0x2C: Deactivation list index — index into the deactivation island's body list.
 		// Initialized to 0x7FFFFFFF (sentinel = "not in any deactivation list").
@@ -94,20 +94,20 @@ namespace RE
 		std::uint32_t deactivationListIndex;  // 2C
 
 		// +0x30: Internal data used by the solver.
-		std::uint64_t internalData;   // 30
+		std::uint64_t internalData;  // 30
 
 		// +0x38: Motion properties ID — determines physics behavior preset.
 		// 0=STATIC, 1=DYNAMIC, 2=KEYFRAMED, 3=FROZEN
 		std::uint16_t motionPropertiesId;  // 38
 
 		// +0x3A: Maximum linear velocity (half-float encoded).
-		std::uint16_t maxLinearVelocity;   // 3A
+		std::uint16_t maxLinearVelocity;  // 3A
 
 		// +0x3C: Maximum angular velocity (half-float encoded).
 		std::uint16_t maxAngularVelocity;  // 3C
 
 		// +0x3E: Deactivation state (island sleeping).
-		std::uint8_t deactivationState;    // 3E
+		std::uint8_t deactivationState;  // 3E
 
 		// +0x3F: Activation tick counter.
 		std::uint8_t activationTickCounter;  // 3F
@@ -115,12 +115,12 @@ namespace RE
 		// +0x40: LINEAR VELOCITY in Havok space (units/second).
 		// For keyframed bodies, this is set via ComputeHardKeyFrame() each frame.
 		// WARNING: This is at +0x40, NOT +0x20 (which is packed inertia).
-		hkVector4f linearVelocity;    // 40
+		hkVector4f linearVelocity;  // 40
 
 		// +0x50: ANGULAR VELOCITY (body-local frame, 2x scaled, radians/second).
 		// For grabbed objects, set to zero to prevent gyroscope spinning.
 		// WARNING: This is at +0x50, NOT +0x30.
-		hkVector4f angularVelocity;   // 50
+		hkVector4f angularVelocity;  // 50
 
 		// +0x60: Previous physics step's linear velocity (world-space, Havok units/sec).
 		// Used by predictBodyTransform for sub-step interpolation: small dt uses this
