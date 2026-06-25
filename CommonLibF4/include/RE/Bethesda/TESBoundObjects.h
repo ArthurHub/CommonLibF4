@@ -665,52 +665,51 @@ namespace RE
 
 		bool IsMeleeWeapon() const
 		{
-			return weaponData.type.any(
-				WEAPON_TYPE::kOneHandSword,
-				WEAPON_TYPE::kOneHandDagger,
-				WEAPON_TYPE::kOneHandAxe,
-				WEAPON_TYPE::kOneHandMace,
-				WEAPON_TYPE::kTwoHandSword,
-				WEAPON_TYPE::kTwoHandAxe);
+			const auto type = weaponData.type.get();
+			return type == WEAPON_TYPE::kOneHandSword ||
+			       type == WEAPON_TYPE::kOneHandDagger ||
+			       type == WEAPON_TYPE::kOneHandAxe ||
+			       type == WEAPON_TYPE::kOneHandMace ||
+			       type == WEAPON_TYPE::kTwoHandSword ||
+			       type == WEAPON_TYPE::kTwoHandAxe;
 		}
 
 		bool IsGunWeapon() const
 		{
-			return weaponData.type.any(
-				WEAPON_TYPE::kGun);
+			return weaponData.type.get() == WEAPON_TYPE::kGun;
 		}
 
 		bool IsThrownWeapon() const
 		{
-			return weaponData.type.any(
-				WEAPON_TYPE::kGrenade,
-				WEAPON_TYPE::kMine);
+			const auto type = weaponData.type.get();
+			return type == WEAPON_TYPE::kGrenade ||
+			       type == WEAPON_TYPE::kMine;
 		}
 
 		bool IsOneHandedWeapon() const
 		{
-			return weaponData.type.any(
-				WEAPON_TYPE::kOneHandSword,
-				WEAPON_TYPE::kOneHandDagger,
-				WEAPON_TYPE::kOneHandAxe,
-				WEAPON_TYPE::kOneHandMace);
+			const auto type = weaponData.type.get();
+			return type == WEAPON_TYPE::kOneHandSword ||
+			       type == WEAPON_TYPE::kOneHandDagger ||
+			       type == WEAPON_TYPE::kOneHandAxe ||
+			       type == WEAPON_TYPE::kOneHandMace;
 		}
 
 		bool IsTwoHandedWeapon() const
 		{
-			return weaponData.type.any(
-				WEAPON_TYPE::kTwoHandSword,
-				WEAPON_TYPE::kTwoHandAxe);
+			const auto type = weaponData.type.get();
+			return type == WEAPON_TYPE::kTwoHandSword ||
+			       type == WEAPON_TYPE::kTwoHandAxe;
 		}
 
 		bool IsRangedWeapon() const
 		{
-			return weaponData.type.any(
-				WEAPON_TYPE::kBow,
-				WEAPON_TYPE::kStaff,
-				WEAPON_TYPE::kGun,
-				WEAPON_TYPE::kGrenade,
-				WEAPON_TYPE::kMine);
+			const auto type = weaponData.type.get();
+			return type == WEAPON_TYPE::kBow ||
+			       type == WEAPON_TYPE::kStaff ||
+			       type == WEAPON_TYPE::kGun ||
+			       type == WEAPON_TYPE::kGrenade ||
+			       type == WEAPON_TYPE::kMine;
 		}
 
 		bool IsBoundWeapon() const

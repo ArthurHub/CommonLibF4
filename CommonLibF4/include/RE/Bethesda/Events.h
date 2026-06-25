@@ -657,8 +657,8 @@ namespace RE
 			return func();
 		}
 
-		[[nodiscard]] constexpr bool IsEnter() const noexcept { return type.all(FurnitureEventType::kEnter); }
-		[[nodiscard]] constexpr bool IsExit() const noexcept { return type.all(FurnitureEventType::kExit); }
+		[[nodiscard]] constexpr bool IsEnter() const noexcept { return type == FurnitureEventType::kEnter; }
+		[[nodiscard]] constexpr bool IsExit() const noexcept { return type == FurnitureEventType::kExit; }
 
 		// members
 		NiPointer<TESObjectREFR>                       actor;            // 00
