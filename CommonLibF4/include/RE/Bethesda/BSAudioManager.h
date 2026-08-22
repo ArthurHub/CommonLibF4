@@ -4,6 +4,7 @@
 #include "RE/Bethesda/BSTArray.h"
 #include "RE/Bethesda/BSTHashMap.h"
 #include "RE/Bethesda/BSTList.h"
+#include "RE/Bethesda/FormComponents.h"
 #include "RE/NetImmerse/NiAVObject.h"
 #include "RE/NetImmerse/NiPoint.h"
 #include "RE/NetImmerse/NiSmartPointer.h"
@@ -17,8 +18,6 @@ namespace RE
 
 	class BSAudioManagerThread;
 	class BSGameSound;
-	class BSISoundDescriptor;
-	struct BSISoundDescriptor::ExtraResolutionData;
 	class BSISoundOutputModel;
 	class BSMultisound;
 	class BSSoundInfo;

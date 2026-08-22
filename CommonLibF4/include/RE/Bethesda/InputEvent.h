@@ -284,7 +284,8 @@ namespace RE
 				return strUserEvent;
 			}
 
-			return "DISABLED"sv;
+			static const BSFixedString disabledUserEvent{ "DISABLED"sv };
+			return disabledUserEvent;
 		}
 
 		[[nodiscard]] const bool           QDisabled() const noexcept { return disabled; }
